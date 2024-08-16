@@ -11,7 +11,7 @@ class Options:
     use_jamf_name: bool = False
     exclude_ids: list = []
 
-    def __init__(self, use_jamf_name = False, exclude_ids = None):
+    def __init__(self, use_jamf_name = False, exclude_ids = []):
         self.use_jamf_name = use_jamf_name
         self.exclude_ids = exclude_ids
 
