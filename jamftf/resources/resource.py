@@ -16,16 +16,18 @@ class ResourceOptions:
 class Resource:
     """parent obj for resources"""
     resource_type = ""
+    client = None
 
     def __init__(
-            self, 
-            client: jamfpy.JamfTenant, 
+            self,
             options: ResourceOptions
             ):
         
-        self.client = client
         self.options = options
 
+
+    def _set_client(self, client: jamfpy.JamfTenant):
+        self.client = client
     
 
     def HCL(self):
