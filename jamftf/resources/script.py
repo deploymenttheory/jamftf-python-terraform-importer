@@ -2,18 +2,18 @@
 
 from .constants import RESOURCE_TYPE_SCRIPT
 from ..hcl import generate_imports
-from .resource import Resource, ResourceOptions
+from .resource import Resource, Options
 from requests import HTTPError
 
 
 class Script(Resource):
     """Script obj"""
     resource_type = RESOURCE_TYPE_SCRIPT
-    data = []
-    options: ResourceOptions
+    _data = []
+    options: Options
 
     # Priv
-    def _get(self, exclude: list = []):
+    def _get(self,):
         """
         must always return
         [
@@ -33,7 +33,7 @@ class Script(Resource):
 
         count = 0
         for i in data:
-            if i["id"] not in exclude:
+            if i["id"] not in self.options.exclude_ids:
                 out.append({
                     "id": i["id"],
                     "name": i["name"]
@@ -41,6 +41,9 @@ class Script(Resource):
 
                 count += 1
 
-        self.data = out
+        self._data = out
+        return out
+
+            
 
 

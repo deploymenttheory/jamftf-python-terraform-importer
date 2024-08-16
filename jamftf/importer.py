@@ -16,10 +16,12 @@ class Importer:
     def HCL(self):
         hcl = ""
         for res in self._targetted:
-            for i in res.HCL():
+            for i in res.generate_hcl():
                 hcl += i
 
+        self.hcl = hcl
         return hcl
+    
 
             
 

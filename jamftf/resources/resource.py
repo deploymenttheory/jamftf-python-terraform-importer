@@ -4,7 +4,8 @@ import jamfpy
 from ..hcl import generate_imports
 from ..exceptions import jamftf_importer_config_error
 
-class ResourceOptions:
+class Options:
+    """options container, to be expanded"""
     use_jamf_name: bool = False
     exclude_ids: list = []
 
@@ -20,7 +21,7 @@ class Resource:
 
     def __init__(
             self,
-            options: ResourceOptions
+            options: Options = None
             ):
         
         self.options = options
@@ -30,7 +31,7 @@ class Resource:
         self.client = client
     
 
-    def HCL(self):
+    def generate_hcl(self):
         """Generates HCL for all Script attrs"""
 
         if not self.resource_type:
