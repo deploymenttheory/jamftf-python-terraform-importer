@@ -11,7 +11,8 @@ class Importer:
     def HCL(self):
         hcl = ""
         for res in self.targetted:
-            hcl += res.HCL()
+            for i in res.HCL():
+                hcl += i
 
         return hcl
 
