@@ -1,1 +1,2 @@
-from .importer import Importer, Script
+from .importer import Importer
+from .resources import *
