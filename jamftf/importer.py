@@ -15,9 +15,8 @@ class Importer:
 
     def HCL(self):
         hcl = ""
-        for res in self._targetted:
-            for i in res.generate_hcl():
-                hcl += i
+        for resource in self._targetted:
+            hcl += "\n".join(resource.generate_hcl())
 
         self.hcl = hcl
         return hcl

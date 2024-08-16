@@ -3,6 +3,8 @@
 import jamfpy
 from ..hcl import generate_imports
 from ..exceptions import jamftf_importer_config_error
+from .constants import *
+from requests import HTTPError
 
 class Options:
     """options container, to be expanded"""
@@ -41,3 +43,44 @@ class Resource:
             "resource_type": self.resource_type,
             "resources": self._get()
         })
+
+
+
+class Script(Resource):
+    """Script obj"""
+    resource_type = RESOURCE_TYPE_SCRIPT
+    _data = []
+    options: Options
+
+    # Priv
+    def _get(self,):
+        """
+        must always return
+        [
+            {
+                "id": ID
+                "name": NAME
+            },
+            ...
+            ...
+        ]
+        """
+        out = []
+        resp, data = self.client.pro.scripts.get_all()
+
+        if not resp.ok:
+            raise HTTPError("bad api call")
+
+        for i in data:
+            if i["id"] not in self.options.exclude_ids:
+                out.append({
+                    "id": i["id"],
+                    "name": i["name"]
+                })
+
+        self._data = out
+        return out
+
+            
+
+
