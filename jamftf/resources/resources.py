@@ -23,10 +23,11 @@ class Resource:
 
     def __init__(
             self,
-            options: Options = None
+            options = None
             ):
         
-        self.options = options
+        if options == None:
+            self.options = Options()
 
 
     def _set_client(self, client: jamfpy.JamfTenant):
