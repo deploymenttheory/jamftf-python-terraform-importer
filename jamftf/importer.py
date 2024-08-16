@@ -1,16 +1,13 @@
 from .resources.script import Script
 
 class Importer:
-    targetted = []
-    def __init__(self, client, use_jamf_name: bool):
-        self.scripts = Script(client, use_jamf_name)
-        self.targetted = [Script(client, use_jamf_name)]
-
-
+    def __init__(self, client, targetted: list):
+        self._client = client
+        self._targetted = targetted
 
     def HCL(self):
         hcl = ""
-        for res in self.targetted:
+        for res in self._targetted:
             for i in res.HCL():
                 hcl += i
 

@@ -2,13 +2,15 @@
 
 from .constants import RESOURCE_TYPE_SCRIPT
 from ..hcl import generate_imports
-from .resource import Resource
+from .resource import Resource, ResourceOptions
 from requests import HTTPError
 
 
 class Script(Resource):
     """Script obj"""
     resource_type = RESOURCE_TYPE_SCRIPT
+    data = []
+    options: ResourceOptions
 
     # Priv
     def _get(self, exclude: list = []):
@@ -39,13 +41,6 @@ class Script(Resource):
 
                 count += 1
 
-        return out
+        self.data = out
 
 
-    # Public
-    def HCL(self):
-        """Generates HCL for all Script attrs"""
-        return generate_imports({
-            "resource_type": self.resource_type,
-            "resources": self._get()
-        })
