@@ -20,6 +20,8 @@ class Resource:
     """parent obj for resources"""
     resource_type = ""
     client = None
+    _data = []
+    _options: Options
 
     def __init__(
             self,
@@ -50,11 +52,9 @@ class Resource:
 class Script(Resource):
     """Script obj"""
     resource_type = RESOURCE_TYPE_SCRIPT
-    _data = []
-    options: Options
 
     # Priv
-    def _get(self,):
+    def _get(self):
         """
         must always return
         [
@@ -82,6 +82,28 @@ class Script(Resource):
         self._data = out
         return out
 
+
+class Categories(Resource):
+    resource_type = RESOURCE_TYPE_CATEGORIES
+
+    def _get(self):
+        out = []
+        resp = self.client.classic.categories.get_all()
+
+        if not resp.ok:
+            raise HTTPError("bad api call")
+        
+        for i in resp.json():
+            if i["id"] not in self.options.exclude_ids:
+                out.append({
+                    "id": i["id"],
+                    "name": i["name"]
+                })
+
+        self._data = out
+        return out
+
+    
             
 
 
