@@ -1,3 +1,1 @@
-from .script import *
-
-__all__ = ["Script"]
+from .resources import *
