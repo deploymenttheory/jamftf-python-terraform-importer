@@ -123,7 +123,6 @@ class Categories(Resource):
     resource_type = RESOURCE_TYPE_CATEGORIES
 
     def get(self):
-        out = []
         resp = self.client.classic.categories.get_all()
 
         if not resp.ok:
@@ -132,8 +131,7 @@ class Categories(Resource):
         for i in resp.json()["categories"]:
             self._data[f"{i["name"]}.{i["id"]}"] = i
 
-        self._data = out
-        return out
+
 
     
             
