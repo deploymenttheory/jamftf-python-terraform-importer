@@ -92,7 +92,7 @@ class Resource:
 
 
 
-class Script(Resource):
+class Scripts(Resource):
     """Script obj"""
     resource_type = RESOURCE_TYPE_SCRIPT
 
@@ -116,25 +116,21 @@ class Script(Resource):
 
 
 
-# class Categories(Resource):
-#     resource_type = RESOURCE_TYPE_CATEGORIES
+class Categories(Resource):
+    resource_type = RESOURCE_TYPE_CATEGORIES
 
-#     def _get(self):
-#         out = []
-#         resp = self.client.classic.categories.get_all()
+    def _get(self):
+        out = []
+        resp = self.client.classic.categories.get_all()
 
-#         if not resp.ok:
-#             raise HTTPError("bad api call")
+        if not resp.ok:
+            raise HTTPError("bad api call")
         
-#         for i in resp.json():
-#             if i["id"] not in self.options.exclude_ids:
-#                 out.append({
-#                     "id": i["id"],
-#                     "name": i["name"]
-#                 })
+        for i in resp.json():
+            self._data[f"{i["name"]}.{i["id"]}"] = i
 
-#         self._data = out
-#         return out
+        self._data = out
+        return out
 
     
             
