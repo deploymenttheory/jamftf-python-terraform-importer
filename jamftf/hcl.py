@@ -34,7 +34,7 @@ def generate_imports(data: dict) -> list:
             import_block(
                 resource_type=data["resource_type"],
                 name = data["resources"][d]["name"],
-                id = data[d]["resources"]["id"]
+                id = data["resources"][d]["id"]
             )
         )
 
