@@ -64,7 +64,7 @@ class Resource:
 
         # Remove duplicates
         for i in self._data:
-            if i["id"] in self.options.exclude_ids:
+            if self._data[i]["id"] in self.options.exclude_ids:
                 del self._data[i]
 
         # Name change
