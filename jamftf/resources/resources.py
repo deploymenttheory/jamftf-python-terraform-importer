@@ -30,7 +30,7 @@ class Resource:
 
     def __init__(
             self,
-            options = None
+            options: Options
             ):
         
 
@@ -38,8 +38,7 @@ class Resource:
         if not self.resource_type:
             raise jamftf_importer_config_error(f"invalid resource type: {self.resource_type}")
         
-        if not options:
-            self.options = Options()
+        self.options = options
 
 
 
