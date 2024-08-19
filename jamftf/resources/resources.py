@@ -30,7 +30,7 @@ class Resource:
 
     def __init__(
             self,
-            options: Options
+            options: Options = None
             ):
         
 
