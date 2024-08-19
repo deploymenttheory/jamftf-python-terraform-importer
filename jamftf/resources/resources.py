@@ -2,49 +2,86 @@
 
 import jamfpy
 from ..hcl import generate_imports
-from ..exceptions import jamftf_importer_config_error
+from ..exceptions import jamftf_importer_config_error, jamftf_data_error
 from .constants import *
 from requests import HTTPError
 
 class Options:
     """options container, to be expanded"""
-    use_jamf_name: bool = False
-    exclude_ids: list = []
-
-    def __init__(self, use_jamf_name = False, exclude_ids = []):
-        self.use_jamf_name = use_jamf_name
+    def __init__(
+            self, 
+            use_resource_type_as_name = False, 
+            exclude_ids = [],
+            ignore_illegal_chars = False
+        ):
+        self.use_resource_type_as_name = use_resource_type_as_name
         self.exclude_ids = exclude_ids
+        self.ignore_illegal_chars = ignore_illegal_chars
 
 
 class Resource:
     """parent obj for resources"""
     resource_type = ""
-    client = None
-    _data = []
-    _options: Options
+    _data = {}
+    client: jamfpy.JamfTenant = None
+    options: Options = None
 
     def __init__(
             self,
             options = None
             ):
         
-        if options == None:
+
+        # validation
+        if not self.resource_type:
+            raise jamftf_importer_config_error(f"invalid resource type: {self.resource_type}")
+        
+        if not options:
             self.options = Options()
 
 
-    def _set_client(self, client: jamfpy.JamfTenant):
+
+    def set_client(self, client: jamfpy.JamfTenant):
+        """function to wrap setting of object bound client"""
+        assert type(client) == jamfpy.JamfTenant, "invalid client type"
         self.client = client
+
+
+    def get(self):
+        """
+        Retrieves data from api and should always populate self._data with:
+        {
+            "id": X,
+            "name": Y
+        }
+        """
+
+        raise jamftf_importer_config_error("operation invalid at Resource level. Please define a resource type")
     
 
-    def generate_hcl(self):
-        """Generates HCL for all Script attrs"""
+    def apply_options(self):
+        """application of options object"""
 
-        if not self.resource_type:
-            raise jamftf_importer_config_error("no resource type set")
+        # Remove duplicates
+        for i in self._data:
+            if i["id"] in self.options.exclude_ids:
+                del self._data[i]
+
+        # Name change
+        if self.options.use_resource_type_as_name:
+            count = 0
+            for i in self._data:
+                self._data[i]["name"] == f"{self.resource_type}-{count}"
+                count += 1
+            
+
+
+    def hcl(self):
+        """Generates HCL for all Script attrs"""
         
         return generate_imports({
             "resource_type": self.resource_type,
-            "resources": self._get()
+            "resources": self._data
         })
 
 
@@ -53,55 +90,45 @@ class Script(Resource):
     """Script obj"""
     resource_type = RESOURCE_TYPE_SCRIPT
 
-    # Priv
-    def _get(self):
+    def get(self):
         """
-        must always return
-        [
-            {
-                "id": ID
-                "name": NAME
-            },
-            ...
-            ...
-        ]
+        Retrieves data from api and should always populate self._data with:
+        {
+            "name.id": {
+                "id": id,
+                "name": name
+            }
+        }
         """
-        out = []
-        resp, data = self.client.pro.scripts.get_all()
 
+        resp, data = self.client.pro.scripts.get_all()
         if not resp.ok:
             raise HTTPError("bad api call")
 
         for i in data:
-            if i["id"] not in self.options.exclude_ids:
-                out.append({
-                    "id": i["id"],
-                    "name": i["name"]
-                })
-
-        self._data = out
-        return out
+            self._data[f"{i["name"]}.{i["id"]}"] = i
 
 
-class Categories(Resource):
-    resource_type = RESOURCE_TYPE_CATEGORIES
 
-    def _get(self):
-        out = []
-        resp = self.client.classic.categories.get_all()
+# class Categories(Resource):
+#     resource_type = RESOURCE_TYPE_CATEGORIES
 
-        if not resp.ok:
-            raise HTTPError("bad api call")
+#     def _get(self):
+#         out = []
+#         resp = self.client.classic.categories.get_all()
+
+#         if not resp.ok:
+#             raise HTTPError("bad api call")
         
-        for i in resp.json():
-            if i["id"] not in self.options.exclude_ids:
-                out.append({
-                    "id": i["id"],
-                    "name": i["name"]
-                })
+#         for i in resp.json():
+#             if i["id"] not in self.options.exclude_ids:
+#                 out.append({
+#                     "id": i["id"],
+#                     "name": i["name"]
+#                 })
 
-        self._data = out
-        return out
+#         self._data = out
+#         return out
 
     
             

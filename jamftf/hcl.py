@@ -16,17 +16,16 @@ def generate_imports(data: dict) -> list:
     data should follow this structure:
     data: {
         "resource_type": TYPE AS IN PROVIDER
-        "resources": [
-            {
-                "id": ID,
-                "name": NAME
+        "resources": {
+            "name.id": {
+                "id": X
+                "name": Y
             },
-            {
-                "id": ID,
-                "name": NAME
+            "name2.id": {
+                "id": X
+                "name": Y
             }
-        ]
-    }
+        }
     """
     out_list = []
 
@@ -34,8 +33,8 @@ def generate_imports(data: dict) -> list:
         out_list.append(
             import_block(
                 resource_type=data["resource_type"],
-                name = d["name"],
-                id = d["id"]
+                name = data[d]["name"],
+                id = data[d]["id"]
             )
         )
 
