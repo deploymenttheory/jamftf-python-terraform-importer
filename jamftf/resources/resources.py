@@ -63,6 +63,9 @@ class Resource:
     def apply_options(self):
         """application of options object"""
 
+        if self.options == None:
+            return
+        
         # Remove duplicates
         if len(self.options.exclude_ids) > 0:
             to_delete = []
