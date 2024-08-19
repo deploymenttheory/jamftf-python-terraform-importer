@@ -126,7 +126,7 @@ class Categories(Resource):
         if not resp.ok:
             raise HTTPError("bad api call")
         
-        for i in resp.json():
+        for i in resp.json()["categories"]:
             self._data[f"{i["name"]}.{i["id"]}"] = i
 
         self._data = out
