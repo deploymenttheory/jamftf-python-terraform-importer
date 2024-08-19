@@ -11,7 +11,7 @@ class Options:
     def __init__(
             self, 
             use_resource_type_as_name = False, 
-            exclude_ids = [],
+            exclude_ids: list = [],
             ignore_illegal_chars = False
         ):
         self.use_resource_type_as_name = use_resource_type_as_name
@@ -66,7 +66,7 @@ class Resource:
         # Remove duplicates
         if len(self.options.exclude_ids) > 0:
             for i in self._data:
-                if self._data[i]["id"] in self.options.exclude_ids:
+                if int(self._data[i]["id"]) in self.options.exclude_ids:
                     del self._data[i]
 
         # Name change
