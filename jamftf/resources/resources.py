@@ -119,7 +119,7 @@ class Scripts(Resource):
 class Categories(Resource):
     resource_type = RESOURCE_TYPE_CATEGORIES
 
-    def _get(self):
+    def get(self):
         out = []
         resp = self.client.classic.categories.get_all()
 
