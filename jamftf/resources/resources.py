@@ -65,12 +65,13 @@ class Resource:
 
         # Remove duplicates
         if len(self.options.exclude_ids) > 0:
-            print("One")
+            to_delete = []
             for i in self._data:
-                print("loop")
                 if int(self._data[i]["id"]) in self.options.exclude_ids:
-                    print("Two")
-                    del self._data[i]
+                    to_delete.append(i)
+
+            for i in to_delete:
+                del self._data[i]
 
         # Name change
         if self.options.use_resource_type_as_name:
