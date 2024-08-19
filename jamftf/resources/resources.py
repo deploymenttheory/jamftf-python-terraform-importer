@@ -73,7 +73,7 @@ class Resource:
         if self.options.use_resource_type_as_name:
             count = 0
             for i in self._data:
-                self._data[i]["name"] == f"{self.resource_type}-{count}"
+                self._data[i]["name"] = f"{self.resource_type}-{count}"
                 count += 1
             
 
