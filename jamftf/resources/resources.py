@@ -27,7 +27,6 @@ class Resource:
     resource_type = ""
     _data = {}
     client: jamfpy.JamfTenant = None
-    options: Options = None
 
     def __init__(
             self,
