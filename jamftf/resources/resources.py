@@ -18,6 +18,9 @@ class Options:
         self.exclude_ids = exclude_ids
         self.ignore_illegal_chars = ignore_illegal_chars
 
+        if exclude_ids == None:
+            exclude_ids = []
+
 
 class Resource:
     """parent obj for resources"""
