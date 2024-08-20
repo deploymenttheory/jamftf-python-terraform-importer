@@ -114,7 +114,6 @@ class Scripts(Resource):
         if not resp.ok:
             raise HTTPError("bad api call")
 
-        self._data = None
         for i in data:
             self._data[f"{i["name"]}.{i["id"]}"] = i
 
@@ -129,7 +128,6 @@ class Categories(Resource):
         if not resp.ok:
             raise HTTPError("bad api call")
         
-        self._data = None
         for i in resp.json()["categories"]:
             self._data[f"{i["name"]}.{i["id"]}"] = i
 
