@@ -24,7 +24,7 @@ class Importer:
         for t in self.targetted:
             t.get()
             t.apply_options()
-            self.hcl += t.hcl()
+            self.hcl += "\n".join(t.hcl())
 
     def HCL(self):
         hcl = ""
