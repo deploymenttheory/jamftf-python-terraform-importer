@@ -5,6 +5,7 @@ from typing import List
 import jamfpy
 
 class Importer:
+    hcl = ""
     def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource]):
 
         if len(targetted) == 0:
@@ -22,9 +23,9 @@ class Importer:
         hcl = ""
         for resource in self._targetted:
             hcl += "\n".join(resource.hcl())
-
+        
         self.hcl = hcl
-        return hcl
+        return self.hcl
     
 
             
