@@ -25,7 +25,6 @@ class Options:
 class Resource:
     """parent obj for resources"""
     resource_type = ""
-    _data = {}
     client: jamfpy.JamfTenant = None
 
     def __init__(
