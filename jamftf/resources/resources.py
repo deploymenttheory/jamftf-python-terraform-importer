@@ -52,8 +52,10 @@ class Resource:
         """
         Retrieves data from api and should always populate self._data with:
         {
-            "id": X,
-            "name": Y
+            "jamfpro_resourcename.id": {
+                "id": X,
+                "name": Y
+            }
         }
         """
 
@@ -115,7 +117,10 @@ class Scripts(Resource):
             raise HTTPError("bad api call")
 
         for i in data:
-            self._data[f"{i["name"]}.{i["id"]}"] = i
+            self._data[f"{i["name"]}.{i["id"]}"] = {
+                "id": i["id"],
+                "name": i["name"]
+            }
 
 
 
@@ -129,7 +134,10 @@ class Categories(Resource):
             raise HTTPError("bad api call")
         
         for i in resp.json()["categories"]:
-            self._data[f"{i["name"]}.{i["id"]}"] = i
+            self._data[f"{i["name"]}.{i["id"]}"] = {
+                "id": i["id"],
+                "name": i["name"]
+            }
 
 
 
