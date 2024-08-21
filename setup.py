@@ -3,5 +3,5 @@ from setuptools import setup, find_packages
 setup(
     name="jamftf",
     packages=find_packages(),
-    version="0.0.55"
+    version="0.0.56"
 )
