@@ -89,11 +89,7 @@ class Resource:
 
     def hcl(self):
         """Generates HCL for all Script attrs"""
-        
-        return generate_imports({
-            "resource_type": self.resource_type,
-            "resources": self._data
-        })
+        return generate_imports(self.resource_type, self._data)
 
 
 

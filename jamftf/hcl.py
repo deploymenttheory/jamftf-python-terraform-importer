@@ -10,7 +10,7 @@ def import_block(resource_type, name, id):
     return "import {\nid = " + str(id) + "\nto = " + f"{resource_type}.{name}" + "\n}" 
 
 
-def generate_imports(data: dict) -> list:
+def generate_imports(resource_type: str, resources: dict) -> list:
     """
     Generates multiple 
     data should follow this structure:
@@ -29,12 +29,12 @@ def generate_imports(data: dict) -> list:
     """
     out_list = []
 
-    for d in data["resources"]:
+    for d in resources:
         out_list.append(
             import_block(
-                resource_type=data["resource_type"],
-                name = data["resources"][d]["name"],
-                id = data["resources"][d]["id"]
+                resource_type=resource_type,
+                name = resources[d]["name"],
+                id = resources[d]["id"]
             )
         )
 
