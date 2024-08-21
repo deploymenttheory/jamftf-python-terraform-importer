@@ -41,6 +41,7 @@ class Resource:
         if client:
             self.client = client
 
+        self._data = {}
         self.options = options
 
         self.get()
