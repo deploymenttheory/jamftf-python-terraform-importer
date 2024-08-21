@@ -5,7 +5,6 @@ from typing import List
 import jamfpy
 
 class Importer:
-    hcl = ""
     targetted: list[Resource] = None
     def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource]):
 
@@ -18,18 +17,21 @@ class Importer:
             t.set_client(client)
             t.get()
             t.apply_options()
-            self.hcl += "\n".join(t.hcl())
 
 
-    def Get(self):
+    def Refresh(self):
         for t in self.targetted:
             t.get()
             t.apply_options()
-            self.hcl += "\n".join(t.hcl())
 
 
     def HCL(self):
-        return self.hcl
+        out = ""
+        for r in self.targetted:
+            out += r.hcl()
+
+        return out
+            
     
 
             
