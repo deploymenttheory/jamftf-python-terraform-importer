@@ -13,9 +13,6 @@ Resource config structure
 
 """
 
-
-
-
 def parse_config_file(jsonString) -> List[Resource]:
     out = []
     for k in jsonString:
