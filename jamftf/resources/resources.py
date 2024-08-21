@@ -2,7 +2,7 @@
 
 import jamfpy
 from ..hcl import generate_imports
-from ..exceptions import jamftf_importer_config_error, jamftf_data_error
+from ..exceptions import importer_config_error, data_error
 from .constants import *
 from requests import HTTPError
 
@@ -18,8 +18,6 @@ class Options:
         self.exclude_ids = exclude_ids
         self.ignore_illegal_chars = ignore_illegal_chars
 
-        if exclude_ids == None:
-            exclude_ids = []
 
 
 class Resource:
@@ -32,11 +30,11 @@ class Resource:
             options: Options = None,
             client: jamfpy.JamfTenant = None
             ):
-        
+
 
         # validation
         if not self.resource_type:
-            raise jamftf_importer_config_error(f"invalid resource type: {self.resource_type}")
+            raise importer_config_error(f"invalid resource type: {self.resource_type}")
         
         if client:
             self.client = client
@@ -44,21 +42,62 @@ class Resource:
         self._data = {}
         self.options = options
 
-        self.get()
-        self.apply_options()
+        self.refresh_data()
 
+
+    # Magic
 
     def __str__(self):
         return f"Jamf Pro Resource of type: {self.resource_type}"
+    
+
+    # Private
+
+    def _validation(self):
+        """checks for illegal chars and more soon"""
+
+        if self.options.ignore_illegal_chars:
+            return
+        
+        for i in self._data:
+            if any(c for c in ILLEGAL_NAME_CHARS in self._data[i]["name"]):
+                raise data_error(f"illegal char found in {self.resource_type}: {self._data[i]}")
 
 
-    def set_client(self, client: jamfpy.JamfTenant):
-        """function to wrap setting of object bound client"""
-        assert type(client) == jamfpy.JamfTenant, "invalid client type"
-        self.client = client
+    def _options(self):
+        """application of options object"""
+
+        if self.options == None:
+            return
+        
+        self._options_remove_duplicates()
+        self._options_name_change()
 
 
-    def get(self):
+    def _options_remove_duplicates(self):
+        """removes dupes"""
+
+        if len(self.options.exclude_ids) > 0:
+            to_delete = []
+            for i in self._data:
+                if int(self._data[i]["id"]) in self.options.exclude_ids:
+                    to_delete.append(i)
+
+            for i in to_delete:
+                del self._data[i]
+
+
+    def _options_name_change(self):
+        """changes name"""
+
+        if self.options.use_resource_type_as_name:
+            count = 0
+            for i in self._data:
+                self._data[i]["name"] = f"{self.resource_type}-{count}"
+                count += 1
+
+
+    def _get(self):
         """
         Retrieves data from api and should always populate self._data with:
         {
@@ -69,45 +108,33 @@ class Resource:
         }
         """
 
-        raise jamftf_importer_config_error("operation invalid at Resource level. Please define a resource type")
-    
-
-    def apply_options(self):
-        """application of options object"""
-
-        if self.options == None:
-            return
-        
-        # Remove duplicates
-        if len(self.options.exclude_ids) > 0:
-            to_delete = []
-            for i in self._data:
-                if int(self._data[i]["id"]) in self.options.exclude_ids:
-                    to_delete.append(i)
-
-            for i in to_delete:
-                del self._data[i]
-
-        # Name change
-        if self.options.use_resource_type_as_name:
-            count = 0
-            for i in self._data:
-                self._data[i]["name"] = f"{self.resource_type}-{count}"
-                count += 1
-            
+        raise importer_config_error("operation invalid at Resource level. Please define a resource type")
 
 
-    def hcl(self):
+    # Public
+
+    def set_client(self, client: jamfpy.JamfTenant):
+        """function to wrap setting of object bound client"""
+        assert type(client) == jamfpy.JamfTenant, "invalid client type"
+        self.client = client
+
+
+    def refresh_data(self):
+        self._get()
+        self._options()
+        self._validation()
+
+
+    def build_hcl(self):
         """Generates HCL for all Script attrs"""
         return generate_imports(self.resource_type, self._data)
-
 
 
 class Scripts(Resource):
     """Script obj"""
     resource_type = RESOURCE_TYPE_SCRIPT
 
-    def get(self):
+    def _get(self):
         """
         Retrieves data from api and should always populate self._data with:
         {
@@ -133,7 +160,7 @@ class Scripts(Resource):
 class Categories(Resource):
     resource_type = RESOURCE_TYPE_CATEGORIES
 
-    def get(self):
+    def _get(self):
         resp = self.client.classic.categories.get_all()
 
         if not resp.ok:

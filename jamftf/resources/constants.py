@@ -1,4 +1,7 @@
 
+# Vars
+ILLEGAL_NAME_CHARS = [".", "/"]
+
 # terraform resource type strings centralised
 RESOURCE_TYPE_SCRIPT = "jamfpro_script"
 RESOURCE_TYPE_CATEGORIES = "jamfpro_category"
