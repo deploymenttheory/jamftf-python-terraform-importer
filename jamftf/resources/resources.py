@@ -40,7 +40,7 @@ class Resource:
             self.client = client
 
         self._data = {}
-        self.options = options
+        self.options = options or Options()
 
         self.refresh_data()
 
