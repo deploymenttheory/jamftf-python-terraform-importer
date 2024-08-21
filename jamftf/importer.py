@@ -11,6 +11,9 @@ class Importer:
         if len(targetted) == 0:
             raise jamftf_importer_config_error("no targets set")
 
+        for t in targetted:
+            t.set_client(client)
+
         self.targetted = targetted
 
 
