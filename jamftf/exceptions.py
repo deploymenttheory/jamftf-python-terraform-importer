@@ -1,8 +1,11 @@
 """Custom Exceptions"""
 
 
-class importer_config_error(Exception):
+class ImporterConfigError(Exception):
     """error type for incorrect configurations"""
 
-class data_error(Exception):
+class DataError(Exception):
     """error type for invalid data combinations/tainted data"""
+
+class InvalidResourceTypeError(Exception):
+    """raised if invalid resource type key reference."""

@@ -2,8 +2,8 @@
 
 import jamfpy
 from ..hcl import generate_imports
-from ..exceptions import importer_config_error, data_error
-from .constants import *
+from ..exceptions import *
+from ..constants import *
 from requests import HTTPError
 
 class Options:
@@ -17,7 +17,6 @@ class Options:
         self.use_resource_type_as_name = use_resource_type_as_name
         self.exclude_ids = exclude_ids
         self.ignore_illegal_chars = ignore_illegal_chars
-
 
 
 class Resource:
@@ -34,7 +33,7 @@ class Resource:
 
         # validation
         if not self.resource_type:
-            raise importer_config_error(f"invalid resource type: {self.resource_type}")
+            raise InvalidResourceTypeError(f"invalid resource type: {self.resource_type}")
         
         if client:
             self.client = client
@@ -61,7 +60,7 @@ class Resource:
         
         for i in self._data:
             if any(c in self._data[i]["name"] for c in ILLEGAL_NAME_CHARS):
-                raise data_error(f"illegal char found in {self.resource_type}: {self._data[i]}")
+                raise DataError(f"illegal char found in {self.resource_type}: {self._data[i]}")
 
 
     def _options(self):
@@ -108,7 +107,7 @@ class Resource:
         }
         """
 
-        raise importer_config_error("operation invalid at Resource level. Please define a resource type")
+        raise ImporterConfigError("operation invalid at Resource level. Please define a resource type")
 
 
     # Public
@@ -132,7 +131,7 @@ class Resource:
 
 class Scripts(Resource):
     """Script obj"""
-    resource_type = RESOURCE_TYPE_SCRIPT
+    resource_type = RESOURCE_TYPES["script"]
 
     def _get(self):
         """
@@ -158,7 +157,7 @@ class Scripts(Resource):
 
 
 class Categories(Resource):
-    resource_type = RESOURCE_TYPE_CATEGORIES
+    resource_type = RESOURCE_TYPES["category"]
 
     def _get(self):
         resp = self.client.classic.categories.get_all()

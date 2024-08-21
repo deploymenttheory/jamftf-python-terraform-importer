@@ -1,5 +1,5 @@
 
-from .exceptions import importer_config_error
+from .exceptions import ImporterConfigError
 from .resources import Resource
 from typing import List
 import jamfpy
@@ -9,7 +9,7 @@ class Importer:
     def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource]):
 
         assert type(client) == jamfpy.JamfTenant, "incorrect client type"
-        if len(targetted) == 0: raise importer_config_error("no targets set")
+        if len(targetted) == 0: raise ImporterConfigError("no targets set")
 
         for t in targetted:
             t.set_client(client)
