@@ -28,7 +28,7 @@ class Importer:
     def HCL(self):
         out = ""
         for r in self.targetted:
-            out += r.hcl()
+            out += "\n".join(r.hcl())
 
         return out
             
