@@ -9,7 +9,7 @@ class Importer:
     def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource]):
 
         assert type(client) == jamfpy.JamfTenant, "incorrect client type"
-        assert len(targetted) != 0, jamftf_importer_config_error("no targets set")
+        if len(targetted) == 0: raise jamftf_importer_config_error("no targets set")
 
         for t in targetted:
             t.set_client(client)
