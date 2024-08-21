@@ -18,6 +18,7 @@ class Importer:
             t.set_client(client)
             t.get()
             t.apply_options()
+            self.hcl += "\n".join(t.hcl())
 
 
     def Get(self):
@@ -26,12 +27,8 @@ class Importer:
             t.apply_options()
             self.hcl += "\n".join(t.hcl())
 
+
     def HCL(self):
-        hcl = ""
-        for resource in self.targetted:
-            hcl += "\n".join(resource.hcl())
-        
-        self.hcl = hcl
         return self.hcl
     
 
