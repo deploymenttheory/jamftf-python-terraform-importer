@@ -30,7 +30,8 @@ class Resource:
 
     def __init__(
             self,
-            options: Options = None
+            options: Options = None,
+            client: jamfpy.JamfTenant = None
             ):
         
 
