@@ -39,7 +39,7 @@ class Resource:
         if not self.resource_type:
             raise jamftf_importer_config_error(f"invalid resource type: {self.resource_type}")
         
-        if self.client:
+        if client:
             self.client = client
 
         self.options = options
