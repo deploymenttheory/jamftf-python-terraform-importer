@@ -60,7 +60,7 @@ class Resource:
             return
         
         for i in self._data:
-            if any(c for c in ILLEGAL_NAME_CHARS in self._data[i]["name"]):
+            if any(c in self._data[i]["name"] for c in ILLEGAL_NAME_CHARS):
                 raise data_error(f"illegal char found in {self.resource_type}: {self._data[i]}")
 
 
