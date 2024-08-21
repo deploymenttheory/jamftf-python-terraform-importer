@@ -40,10 +40,12 @@ class Resource:
         
         self.options = options
 
+        self.get()
+        self.apply_options()
+
 
     def __str__(self):
         return f"Jamf Pro Resource of type: {self.resource_type}"
-
 
 
     def set_client(self, client: jamfpy.JamfTenant):

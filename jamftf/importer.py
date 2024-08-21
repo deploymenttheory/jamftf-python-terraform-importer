@@ -13,12 +13,6 @@ class Importer:
 
         self.targetted = targetted
 
-        for t in self.targetted:
-            print(t)
-            t.set_client(client)
-            t.get()
-            t.apply_options()
-
 
     def Refresh(self):
         for t in self.targetted:
