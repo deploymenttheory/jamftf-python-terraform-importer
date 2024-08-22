@@ -17,7 +17,7 @@ Resource config structure
 
 RESOURCE_TYPE_OBJECT_MAP = {
     "jamfpro_script": Scripts,
-    "jamfpro_catagory": Categories
+    "jamfpro_category": Categories
 }
 
 
