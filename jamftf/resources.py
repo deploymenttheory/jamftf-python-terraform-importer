@@ -1,21 +1,24 @@
 """parent obj for resources"""
 
 import jamfpy
-from .hcl import generate_imports
-from .exceptions import *
-from .constants import RESOURCE_TYPES, ILLEGAL_NAME_CHARS
 from requests import HTTPError
+from .hcl import generate_imports
+from .exceptions import InvalidResourceTypeError, DataError, ImporterConfigError
+from .constants import RESOURCE_TYPES, ILLEGAL_NAME_CHARS
+
 
 class Options:
     """options container, to be expanded"""
     def __init__(
-            self, 
-            use_resource_type_as_name = False, 
-            exclude_ids: list = [],
+            self,
+            use_resource_type_as_name = False,
+            exclude_ids: list = None,
             ignore_illegal_chars = False
         ):
         self.use_resource_type_as_name = use_resource_type_as_name
-        self.exclude_ids = exclude_ids
+
+        self.exclude_ids = exclude_ids or []
+
         self.ignore_illegal_chars = ignore_illegal_chars
 
 
@@ -28,20 +31,20 @@ class Resource:
 
         if not self.resource_type:
             raise InvalidResourceTypeError(f"invalid resource type: {self.resource_type}")
-        
+
         self._data = {}
         self.options = options or Options()
 
         if client:
             self.client = client
             self.refresh_data()
-            
+
 
     # Magic
 
     def __str__(self):
         return f"Jamf Pro Resource of type: {self.resource_type}"
-    
+
 
     # Private
 
@@ -50,7 +53,7 @@ class Resource:
 
         if self.options.ignore_illegal_chars:
             return
-        
+
         for i in self._data:
             if any(c in self._data[i]["name"] for c in ILLEGAL_NAME_CHARS):
                 raise DataError(f"illegal char found in {self.resource_type}: {self._data[i]}")
@@ -59,9 +62,9 @@ class Resource:
     def _options(self):
         """application of options object"""
 
-        if self.options == None:
+        if self.options is None:
             return
-        
+
         self._options_remove_duplicates()
         self._options_name_change()
 
@@ -107,14 +110,15 @@ class Resource:
 
     def set_client(self, client: jamfpy.JamfTenant):
         """function to wrap setting of object bound client"""
-        assert type(client) == jamfpy.JamfTenant, "invalid client type"
+        assert isinstance(client, jamfpy.JamfTenant), "invalid client type"
         self.client = client
 
 
     def refresh_data(self):
-        if self.client == None:
+        """refreshes data held by object from api"""
+        if self.client is None:
             raise ImporterConfigError("no client provided.Provide client via object creation or .set_client(client)")
-        
+
         self._get()
         self._options()
         self._validation()
@@ -145,14 +149,14 @@ class Scripts(Resource):
             raise HTTPError("bad api call")
 
         for i in data:
-            self._data[f"{i["name"]}.{i["id"]}"] = {
+            self._data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
                 "name": i["name"],
             }
 
 
-
 class Categories(Resource):
+    """catagories"""
     resource_type = RESOURCE_TYPES["category"]
 
     def _get(self):
@@ -160,9 +164,9 @@ class Categories(Resource):
 
         if not resp.ok:
             raise HTTPError("bad api call")
-        
+
         for i in resp.json()["categories"]:
-            self._data[f"{i["name"]}.{i["id"]}"] = {
+            self._data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
                 "name": i["name"]
             }

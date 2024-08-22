@@ -1,6 +1,5 @@
 """Custom Exceptions"""
 
-
 class ImporterConfigError(Exception):
     """error type for incorrect configurations"""
 
@@ -9,4 +8,3 @@ class DataError(Exception):
 
 class InvalidResourceTypeError(Exception):
     """raised if invalid resource type key reference."""
-

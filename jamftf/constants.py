@@ -1,3 +1,4 @@
+"""storage for all constant values for easier configuration"""
 
 # Vars
 ILLEGAL_NAME_CHARS = [".", "/"]

@@ -2,12 +2,12 @@
 handles all hcl related operations
 """
 
-def import_block(resource_type, name, id):
+def import_block(resource_type, name, jpro_id):
     """
     Constructs a valid import block using the resource type, name and server id.
     """
 
-    return "import {\nid = " + str(id) + "\nto = " + f"{resource_type}.{name}" + "\n}\n" 
+    return "import {\nid = " + str(jpro_id) + "\nto = " + f"{resource_type}.{name}" + "\n}\n"
 
 
 def generate_imports(resource_type: str, resources: dict) -> list:
@@ -34,7 +34,7 @@ def generate_imports(resource_type: str, resources: dict) -> list:
             import_block(
                 resource_type=resource_type,
                 name = resources[d]["name"],
-                id = resources[d]["id"]
+                jpro_id = resources[d]["id"]
             )
         )
 

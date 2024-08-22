@@ -1,15 +1,20 @@
-
-from .exceptions import ImporterConfigError
-from .resources import Resource
+"""main importer object"""
 from typing import List
 import jamfpy
+from .exceptions import ImporterConfigError
+from .resources import Resource
+
 
 class Importer:
+    """object for managing all targetted resources"""
+
     targetted: list[Resource] = None
     def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource]):
 
-        assert type(client) == jamfpy.JamfTenant, "incorrect client type"
-        if len(targetted) == 0: raise ImporterConfigError("no targets set")
+        assert isinstance(client, jamfpy.JamfTenant), "incorrect client type"
+
+        if len(targetted) == 0:
+            raise ImporterConfigError("no targets set")
 
         for t in targetted:
             t.set_client(client)
@@ -31,9 +36,3 @@ class Importer:
             out += "\n".join(r.build_hcl()) + "\n"
 
         return out
-            
-    
-
-            
-
-
