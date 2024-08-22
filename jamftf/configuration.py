@@ -1,4 +1,4 @@
-from constants import ALL_RESOURCE_TYPES, RESOURCE_TYPE_OBJECTS
+from constants import ALL_RESOURCE_TYPES
 from exceptions import InvalidResourceTypeError
 from typing import List
 from .resources.resources import Resource
@@ -19,7 +19,7 @@ def parse_config_file(jsonString) -> List[Resource]:
         if k not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {k}")
         
-        out.append(RESOURCE_TYPE_OBJECTS[k])
+        # out.append(RESOURCE_TYPE_OBJECTS[k])
     
 
     return out
