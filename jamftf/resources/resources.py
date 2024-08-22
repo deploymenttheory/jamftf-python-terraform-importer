@@ -6,7 +6,6 @@ from ..exceptions import *
 from ..constants import RESOURCE_TYPES, ILLEGAL_NAME_CHARS
 from requests import HTTPError
 
-
 class Options:
     """options container, to be expanded"""
     def __init__(
@@ -167,10 +166,3 @@ class Categories(Resource):
                 "id": i["id"],
                 "name": i["name"]
             }
-
-
-
-    
-            
-
-
