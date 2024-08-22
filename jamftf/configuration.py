@@ -1,6 +1,7 @@
-from constants import ALL_RESOURCE_TYPES
-from exceptions import InvalidResourceTypeError
 from typing import List
+
+from .constants import ALL_RESOURCE_TYPES
+from .exceptions import InvalidResourceTypeError
 from .resources.resources import Resource
 
 """
