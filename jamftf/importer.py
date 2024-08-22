@@ -13,6 +13,7 @@ class Importer:
 
         for t in targetted:
             t.set_client(client)
+            t.refresh_data()
 
         self.targetted = targetted
 
