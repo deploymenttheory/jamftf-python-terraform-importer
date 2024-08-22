@@ -6,10 +6,10 @@ from ..exceptions import *
 from ..constants import RESOURCE_TYPES, ILLEGAL_NAME_CHARS
 from requests import HTTPError
 
-# RESOURCE_TYPE_OBJECTS = {
-#     RESOURCE_TYPES["script"]: Scripts,
-#     RESOURCE_TYPES["category"]: Categories,
-# }
+
+TEST = {
+    "a": Scripts,
+}
 
 class Options:
     """options container, to be expanded"""
