@@ -124,6 +124,9 @@ class Resource:
 
 
     def refresh_data(self):
+        if self.client == None:
+            raise ImporterConfigError("no client provided.\nProvide client via object creation or .set_client(client)")
+        
         self._get()
         self._options()
         self._validation()
