@@ -1,7 +1,7 @@
 from typing import List
 
 from .constants import ALL_RESOURCE_TYPES
-from .exceptions import InvalidResourceTypeError
+from .exceptions import *
 from .resources.resources import *
 
 
@@ -21,17 +21,32 @@ RESOURCE_TYPE_OBJECT_MAP = {
 }
 
 
-def parse_config_file(configJson) -> List[Resource]:
+
+
+VALID_CONFIG_KEYS = ["active"]
+REQUIRED_CONFIG_KEYS = ["active"]
+
+def parse_config_file(configJson: dict) -> List[Resource]:
     out = []
 
-    for k in configJson:
-        if k not in ALL_RESOURCE_TYPES:
-            raise InvalidResourceTypeError(f"invalid resource type: {k}")
+    for rk in configJson:
+
+        # Invalid resource key
+        if rk not in ALL_RESOURCE_TYPES:
+            raise InvalidResourceTypeError(f"invalid resource type: {rk}")
         
-        out.append(RESOURCE_TYPE_OBJECT_MAP[k])
-    
+        # Invalid option key
+        if not all(i in VALID_CONFIG_KEYS for i in configJson[rk]):
+            raise DataError(f"invalid options key found")
+
+        # Resource not set to active
+        if not configJson[rk]["active"]:
+            continue
+
+        # for opt in configJson[rk]:
+
+
 
     return out
     
-        
         
