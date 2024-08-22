@@ -15,10 +15,9 @@ class Options:
             exclude_ids: list = None,
             ignore_illegal_chars = False
         ):
+
         self.use_resource_type_as_name = use_resource_type_as_name
-
         self.exclude_ids = exclude_ids or []
-
         self.ignore_illegal_chars = ignore_illegal_chars
 
 
