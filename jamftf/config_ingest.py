@@ -8,12 +8,15 @@ from .resources import (
     Scripts,
     Categories
 )
+from .options import Options
 
 
 RESOURCE_TYPE_OBJECT_MAP = {
     "jamfpro_script": Scripts,
     "jamfpro_category": Categories
 }
+
+
 
 VALID_CONFIG_KEYS = [
     "active", 
@@ -22,7 +25,9 @@ VALID_CONFIG_KEYS = [
     "ignore_illegal_characters"
 ]
 
-REQUIRED_CONFIG_KEYS = ["active"]
+REQUIRED_CONFIG_KEYS = [
+    "active"
+]
 
 def parse_config_file(config_json: dict) -> List[Resource]:
     """parses a config file"""
@@ -34,10 +39,11 @@ def parse_config_file(config_json: dict) -> List[Resource]:
         if rk not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {rk}")
 
-        # Invalid option key
+        # Invalid option key // TODO refactor this to extract better logging
         if any(i not in VALID_CONFIG_KEYS for i in config_json[rk]):
             raise DataError("invalid options key found")
         
+        # Required keys + refactor as above.
         if any(i not in config_json[rk] for i in REQUIRED_CONFIG_KEYS):
             raise DataError("missing required key")
 
@@ -45,8 +51,10 @@ def parse_config_file(config_json: dict) -> List[Resource]:
         if not config_json[rk]["active"]:
             continue
 
-        # for opt in configJson[rk]:
-
+        opts = Options(_from_json=config_json[rk])
+        out.append(
+            RESOURCE_TYPE_OBJECT_MAP[rk](options=opts)
+        )
 
 
     return out
