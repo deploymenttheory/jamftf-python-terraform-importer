@@ -27,27 +27,20 @@ class Options:
 class Resource:
     """parent obj for resources"""
     resource_type = ""
-    client: jamfpy.JamfTenant = None
 
-    def __init__(
-            self,
-            options: Options = None,
-            client: jamfpy.JamfTenant = None
-            ):
+    def __init__(self, options: Options = None, client: jamfpy.JamfTenant = None):
 
 
-        # validation
         if not self.resource_type:
             raise InvalidResourceTypeError(f"invalid resource type: {self.resource_type}")
         
-        if client:
-            self.client = client
-
         self._data = {}
         self.options = options or Options()
 
-        self.refresh_data()
-
+        if client:
+            self.client = client
+            self.refresh_data()
+            
 
     # Magic
 
@@ -159,7 +152,7 @@ class Scripts(Resource):
         for i in data:
             self._data[f"{i["name"]}.{i["id"]}"] = {
                 "id": i["id"],
-                "name": i["name"]
+                "name": i["name"],
             }
 
 
