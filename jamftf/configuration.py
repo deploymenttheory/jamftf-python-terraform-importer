@@ -16,14 +16,15 @@ Resource config structure
 """
 
 RESOURCE_TYPE_OBJECT_MAP = {
-    "script": Scripts,
-    "category": Categories
+    "jamfpro_script": Scripts,
+    "jamfpro_catagory": Categories
 }
 
 
-def parse_config_file(jsonString) -> List[Resource]:
+def parse_config_file(configJson) -> List[Resource]:
     out = []
-    for k in jsonString:
+
+    for k in configJson:
         if k not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {k}")
         
