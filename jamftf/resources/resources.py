@@ -7,10 +7,6 @@ from ..constants import RESOURCE_TYPES, ILLEGAL_NAME_CHARS
 from requests import HTTPError
 
 
-TEST = {
-    "a": Scripts,
-}
-
 class Options:
     """options container, to be expanded"""
     def __init__(
