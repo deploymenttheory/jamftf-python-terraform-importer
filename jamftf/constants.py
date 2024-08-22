@@ -1,6 +1,4 @@
 
-from .resources import Scripts, Categories
-
 # Vars
 ILLEGAL_NAME_CHARS = [".", "/"]
 
@@ -13,7 +11,3 @@ RESOURCE_TYPES = {
 
 ALL_RESOURCE_TYPES = list(RESOURCE_TYPES.values())
 
-RESOURCE_TYPE_OBJECTS = {
-    RESOURCE_TYPES["script"]: Scripts,
-    RESOURCE_TYPES["category"]: Categories,
-}
