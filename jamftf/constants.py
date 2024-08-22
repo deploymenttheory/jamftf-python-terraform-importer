@@ -1,5 +1,5 @@
 
-from .resources import *
+from .resources import Scripts, Categories
 
 # Vars
 ILLEGAL_NAME_CHARS = [".", "/"]
