@@ -1,7 +1,7 @@
 """storage for all constant values for easier configuration"""
 
 # Vars
-ILLEGAL_NAME_CHARS = [".", "/"]
+ILLEGAL_NAME_CHARS = [".", "/", " "]
 
 # terraform resource type strings centralised
 RESOURCE_TYPES = {

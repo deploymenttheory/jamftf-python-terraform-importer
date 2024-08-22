@@ -25,7 +25,4 @@ class Options:
         self.exclude_ids = config["exclude_ids"]
         self.ignore_illegal_chars = config["ignore_illegal_chars"]
 
-
-
-        
         
