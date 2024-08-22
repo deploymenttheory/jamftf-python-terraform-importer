@@ -1,9 +1,9 @@
 """parent obj for resources"""
 
 import jamfpy
-from ..hcl import generate_imports
-from ..exceptions import *
-from ..constants import RESOURCE_TYPES, ILLEGAL_NAME_CHARS
+from .hcl import generate_imports
+from .exceptions import *
+from .constants import RESOURCE_TYPES, ILLEGAL_NAME_CHARS
 from requests import HTTPError
 
 class Options:
