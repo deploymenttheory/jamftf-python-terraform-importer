@@ -38,7 +38,7 @@ def parse_config_file(config_json: dict) -> List[Resource]:
         if any(i not in VALID_CONFIG_KEYS for i in config_json[rk]):
             raise DataError("invalid options key found")
         
-        if not all(i in REQUIRED_CONFIG_KEYS for i in config_json[rk]):
+        if any(i not in config_json[rk] for i in REQUIRED_CONFIG_KEYS):
             raise DataError("missing required key")
 
         # Resource not set to active
