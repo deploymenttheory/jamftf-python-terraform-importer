@@ -12,24 +12,18 @@ class Resource:
     """parent obj for resources"""
     resource_type = ""
 
-    def __init__(self, options: Options = None, client: jamfpy.JamfTenant = None):
-
+    def __init__(self, options: Options = None, validate: bool = True, client: jamfpy.JamfTenant = None):
         if not self.resource_type:
             raise InvalidResourceTypeError(f"Instantiate a specific resource type and not the parent {self.resource_type}")
 
         self.data = {}
+        opts_schema = options.options() or Options().options()
+        self.applicator = Applicator(self.resource_type, opts=opts_schema, validate=validate)
         
-        if options:
-            self.options = options.options() or Options()
-
-        self.applicator = Applicator(self.resource_type)
 
         if client:
             self.client = client
             self.refresh_data()
-
-        elif not client:
-            pass # warn here when logger in.
 
 
     # Magic
@@ -46,7 +40,7 @@ class Resource:
         if not self.options:
             return
         
-        self.data = self.applicator.apply(self.data, self.options)
+        self.data = self.applicator.apply(self.data)
    
 
     def _get(self):

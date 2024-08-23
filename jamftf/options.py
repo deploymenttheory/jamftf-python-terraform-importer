@@ -8,14 +8,10 @@ class Options:
             self,
             use_resource_type_as_name = False,
             exclude_ids: list = None,
-            ignore_illegal_chars = False,
-            enable_validation = True
         ):
 
         self.use_resource_type_as_name = use_resource_type_as_name
         self.exclude_ids = exclude_ids or []
-        self.ignore_illegal_chars = ignore_illegal_chars
-        self.enable_validation = enable_validation
 
 
     def _generate_output(self):
@@ -23,8 +19,6 @@ class Options:
         return {
             "use_resource_type_as_name": self.use_resource_type_as_name,
             "exclude_ids": self.exclude_ids,
-            "ignore_illegal_chars": self.ignore_illegal_chars,
-            "enable_validation": self.enable_validation
         }
     
     def options(self):
@@ -35,23 +29,27 @@ class Applicator:
     """
     Applicator holds interfaced methods for applying options form json schema
     """
-    def __init__(self, resource_type):
-        self.resource_type = resource_type
-
-
-    def apply(self, data: dict, opts: dict):
+    def __init__(self, resource_type, opts, validate):
         self.opts = opts
+        self.resource_type = resource_type
+        self.validate = validate
+
+
+    def apply(self, data: dict):
         OPTIONS_MASTER = {
             "exclude_ids": self.exclude_ids,
             "use_resource_type_as_name": self.use_resource_type_as_name,
-            "enable_validation": self._validation
         }
 
-        for o in opts:
-            if opts[o]:
-                OPTIONS_MASTER[o](data)
+        for o in self.opts:
+            if self.opts[o]:
+                data = OPTIONS_MASTER[o](data)
+
+        if self.validate:
+            self._validation(data)
 
         return data
+    
 
     def _validation(self, data):
         self._check_illegal_chars(data)
