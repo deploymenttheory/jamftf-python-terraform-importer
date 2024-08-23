@@ -17,7 +17,7 @@ class Importer:
             raise ImporterConfigError("no targets set")
 
         for t in targetted:
-            if global_options_dict:
+            if global_options is not None:
                 global_options_dict = global_options.options()
                 for k in global_options_dict:
                     if k in t.options.options():
