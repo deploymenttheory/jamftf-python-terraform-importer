@@ -50,5 +50,6 @@ class Importer:
 
             os.remove(fn)
 
-        out = pretty_hcl
+            out = pretty_hcl
+            
         return out
