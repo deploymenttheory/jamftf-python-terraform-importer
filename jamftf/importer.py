@@ -38,7 +38,7 @@ class Importer:
             out += "\n" + "\n".join(r.build_hcl()) + "\n"
 
         pretty_hcl = ""
-        fp = f"{cwd}/_temp_{randint(1, 9999)}.tf"
+        fp = f"{cwd}/temp_{randint(1, 9999)}.tf"
         if pretty:
             if not cwd:
                 raise ImporterConfigError("no working dir given")
