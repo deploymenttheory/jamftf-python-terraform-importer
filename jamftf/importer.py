@@ -38,7 +38,7 @@ class Importer:
             out += "\n" + "\n".join(r.build_hcl()) + "\n"
 
         pretty_hcl = ""
-        fn = f"_temp_{randint(1, 9999)}"
+        fn = f"_temp_{randint(1, 9999)}.tf"
         if pretty:
             with open(fn, "w") as f:
                 f.write(out)
@@ -48,7 +48,7 @@ class Importer:
             with open(fn, "r") as f:
                 pretty_hcl = f.read()
 
-            # os.remove(fn)
+            os.remove(fn)
 
             out = pretty_hcl
 
