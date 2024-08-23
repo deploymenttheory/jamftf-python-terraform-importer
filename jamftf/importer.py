@@ -3,9 +3,6 @@ from typing import List
 import jamfpy
 from .exceptions import ImporterConfigError, OptionsConflictError
 from .resources import Resource
-from .options import Options
-from random import randint
-import os
 
 class Importer:
     """object for managing all targetted resources"""
