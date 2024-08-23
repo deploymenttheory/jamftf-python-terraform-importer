@@ -61,7 +61,7 @@ class Applicator:
         to_delete = []
         for i in data:
             if int(data[i]["id"]) in self.opts["exclude_ids"]:
-                to_delete.append(data[i])
+                to_delete.append(i)
 
         for i in to_delete:
             del data[i]
