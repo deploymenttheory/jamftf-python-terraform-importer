@@ -18,7 +18,7 @@ class Resource:
 
         self.data = {}
 
-        opts_schema = options.options() if options is not None else Options.options()
+        opts_schema = options.options() if options is not None else Options().options()
 
         self.applicator = Applicator(self.resource_type, opts=opts_schema, validate=validate)
         
