@@ -19,12 +19,15 @@ class Resource:
         self.data = {}
 
         self.options = options if options is not None else Options()
+
         self.applicator = Applicator(self.resource_type, opts=self.options.options(), validate=validate)
         
 
         if client:
             self.client = client
             self.refresh_data()
+
+        
 
 
     # Magic

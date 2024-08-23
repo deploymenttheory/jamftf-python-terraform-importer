@@ -85,7 +85,7 @@ class Applicator:
         for i in data:
             for c in data[i]["name"]:
                 if c in ILLEGAL_NAME_CHARS:
-                    raise DataError(f"Illegal char: {c} found in res: {i}, name: {data[i]["name"]}")
+                    raise DataError(f"Illegal char: '{c}' found in res: {i}, name: {data[i]["name"]}")
 
 
     def _check_duplicates(self, data: dict):
