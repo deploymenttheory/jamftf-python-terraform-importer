@@ -18,7 +18,10 @@ class Resource:
 
         self.data = {}
 
-        print(f"HERE: {options}")
+        if options is not None:
+            opts_schema = options.options()
+        else:
+            opts_schema = Options().options()
 
         opts_schema = options.options() or Options().options()
         self.applicator = Applicator(self.resource_type, opts=opts_schema, validate=validate)
