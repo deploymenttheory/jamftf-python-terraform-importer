@@ -17,6 +17,9 @@ class Resource:
             raise InvalidResourceTypeError(f"Instantiate a specific resource type and not the parent {self.resource_type}")
 
         self.data = {}
+
+        print(f"HERE: {options}")
+
         opts_schema = options.options() or Options().options()
         self.applicator = Applicator(self.resource_type, opts=opts_schema, validate=validate)
         
