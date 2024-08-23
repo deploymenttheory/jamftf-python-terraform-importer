@@ -31,29 +31,10 @@ class Importer:
             t.refresh_data()
 
 
-    def HCL(self, pretty: bool = True, cwd: str = ""):
+    def HCL(self):
         """generates hcl on every targetted object"""
         out = ""
         for r in self.targetted:
             out += "\n" + "\n".join(r.build_hcl()) + "\n"
-
-        pretty_hcl = ""
-        fp = f"{cwd}/temp_{randint(1, 9999)}.tf"
-        if pretty:
-            if not cwd:
-                raise ImporterConfigError("no working dir given")
-            
-            with open(fp, "w") as f:
-                print(f)
-                f.write(out)
-
-            os.system(f"{cwd} terraform fmt")
-
-            with open(fp, "r") as f:
-                pretty_hcl = f.read()
-
-            os.remove(fp)
-
-            out = pretty_hcl
 
         return out
