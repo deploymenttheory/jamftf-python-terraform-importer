@@ -42,12 +42,12 @@ class Importer:
         if pretty:
             if not cwd:
                 raise ImporterConfigError("no working dir given")
-            with open(fn, "w") as f:
+            with open(fp, "w") as f:
                 f.write(out)
 
             os.system("terraform fmt")
 
-            with open(fn, "r") as f:
+            with open(fp, "r") as f:
                 pretty_hcl = f.read()
 
             # os.remove(fn)
