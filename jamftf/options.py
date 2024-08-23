@@ -28,7 +28,7 @@ class Options:
     def options(self):
         return self._generate_output()
     
-    def add(self, key):
+    def add(self, key, value):
         self.out[key] = value
 
         
