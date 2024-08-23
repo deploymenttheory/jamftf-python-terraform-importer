@@ -1,5 +1,4 @@
 """home of options"""
-from .resources import Resource
 from .constants import ILLEGAL_NAME_CHARS
 from .exceptions import DataError
 
