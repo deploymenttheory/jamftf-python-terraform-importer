@@ -33,6 +33,6 @@ class Importer:
         """generates hcl on every targetted object"""
         out = ""
         for r in self.targetted:
-            out += "\n".join(r.build_hcl()) + "\n"
+            out += "\n" + "\n".join(r.build_hcl()) + "\n"
 
         return out
