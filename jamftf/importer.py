@@ -31,15 +31,17 @@ class Importer:
             t.refresh_data()
 
 
-    def HCL(self, pretty=False):
+    def HCL(self, pretty: bool = True, cwd: str = ""):
         """generates hcl on every targetted object"""
         out = ""
         for r in self.targetted:
             out += "\n" + "\n".join(r.build_hcl()) + "\n"
 
         pretty_hcl = ""
-        fn = f"_temp_{randint(1, 9999)}.tf"
+        fp = f"{cwd}/_temp_{randint(1, 9999)}.tf"
         if pretty:
+            if not cwd:
+                raise ImporterConfigError("no working dir given")
             with open(fn, "w") as f:
                 f.write(out)
 
