@@ -1,15 +1,15 @@
 """main importer object"""
 from typing import List
 import jamfpy
-from .exceptions import ImporterConfigError
+from .exceptions import ImporterConfigError, OptionsConflictError
 from .resources import Resource
-
+from .options import Options
 
 class Importer:
     """object for managing all targetted resources"""
 
     targetted: list[Resource] = None
-    def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource]):
+    def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource], global_options: Options):
 
         assert isinstance(client, jamfpy.JamfTenant), "incorrect client type"
 
@@ -17,6 +17,14 @@ class Importer:
             raise ImporterConfigError("no targets set")
 
         for t in targetted:
+            global_options_dict = global_options.options()
+            for k in global_options_dict:
+                if k in t.options.options():
+                    raise OptionsConflictError(f"conflicting option: {k}")
+                
+                t.options.add(k, global_options_dict[k])
+
+
             t.set_client(client)
             t.refresh_data()
 

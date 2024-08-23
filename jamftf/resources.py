@@ -17,18 +17,9 @@ class Resource:
             raise InvalidResourceTypeError(f"Instantiate a specific resource type and not the parent {self.resource_type}")
 
         self.data = {}
-
         self.options = options if options is not None else Options()
-
         self.applicator = Applicator(self.resource_type, opts=self.options.options(), validate=validate)
         
-
-        if client:
-            self.client = client
-            self.refresh_data()
-
-        
-
 
     # Magic
 
@@ -39,11 +30,7 @@ class Resource:
     # Private
 
     def _apply_options(self):
-        """sends data through applicator object to have options applied"""
-
-        if not self.options:
-            return
-        
+        """sends data through applicator object to have options applied"""        
         self.data = self.applicator.apply(self.data)
    
 
@@ -63,11 +50,23 @@ class Resource:
 
     # Public
 
-    def set_client(self, client: jamfpy.JamfTenant):
+    def set_client(self, client: jamfpy.JamfTenant, refresh_data: bool = False):
         """function to wrap setting of object bound client"""
 
         assert isinstance(client, jamfpy.JamfTenant), "invalid client type"
         self.client = client
+
+        if refresh_data:
+            self.refresh_data()
+
+
+    def set_options(self, options: Options, apply: bool = False):
+        """set_options allows options to be set after instantiation"""
+        assert isinstance(options, Options)
+        self.options = options
+
+        if apply:
+            self._apply_options()
 
 
     def refresh_data(self):

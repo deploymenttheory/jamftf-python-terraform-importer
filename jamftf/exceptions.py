@@ -8,3 +8,6 @@ class DataError(Exception):
 
 class InvalidResourceTypeError(Exception):
     """raised if invalid resource type key reference."""
+
+class OptionsConflictError(Exception):
+    """raised if conflict found between global and local options"""

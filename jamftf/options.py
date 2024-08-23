@@ -9,20 +9,30 @@ class Options:
             use_resource_type_as_name = False,
             exclude_ids: list = None,
         ):
-
+        
+        self.out = {}
         self.use_resource_type_as_name = use_resource_type_as_name
         self.exclude_ids = exclude_ids or []
 
 
+
     def _generate_output(self):
         """generates output"""
-        return {
+        out = {
             "use_resource_type_as_name": self.use_resource_type_as_name,
             "exclude_ids": self.exclude_ids,
         }
+        self.out = out
+        return out
     
     def options(self):
         return self._generate_output()
+    
+    def add(self, key):
+        self.out[key] = value
+
+        
+
 
 
 class Applicator:
