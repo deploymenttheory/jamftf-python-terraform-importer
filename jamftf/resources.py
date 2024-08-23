@@ -19,9 +19,8 @@ class Resource:
 
         self.data = {}
         
-        self.options = None
         if options:
-            self.options = options.options() or None
+            self.options = options.options() or Options()
 
         self.applicator = Applicator(self.resource_type)
 
