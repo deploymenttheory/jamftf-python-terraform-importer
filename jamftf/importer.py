@@ -44,6 +44,7 @@ class Importer:
                 raise ImporterConfigError("no working dir given")
             
             with open(fp, "w") as f:
+                print(f)
                 f.write(out)
 
             os.system(f"{cwd} terraform fmt")
