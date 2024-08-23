@@ -11,3 +11,4 @@ RESOURCE_TYPES = {
 }
 
 ALL_RESOURCE_TYPES = list(RESOURCE_TYPES.values())
+

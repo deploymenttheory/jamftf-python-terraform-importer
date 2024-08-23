@@ -5,7 +5,7 @@ from requests import HTTPError
 from .hcl import generate_imports
 from .exceptions import InvalidResourceTypeError, DataError, ImporterConfigError
 from .constants import RESOURCE_TYPES, ILLEGAL_NAME_CHARS
-from .options import Options
+from .options import Options, Applicator
 
 
 class Resource:
@@ -14,16 +14,20 @@ class Resource:
 
     def __init__(self, options: Options = None, client: jamfpy.JamfTenant = None):
 
-
         if not self.resource_type:
-            raise InvalidResourceTypeError(f"invalid resource type: {self.resource_type}")
+            raise InvalidResourceTypeError(f"Instantiate a specific resource type and not the parent {self.resource_type}")
 
-        self._data = {}
-        self.options = options or Options()
+        self.data = {}
+        self.options = options.options() or None
+
+        self.applicator = Applicator(self.resource_type)
 
         if client:
             self.client = client
             self.refresh_data()
+
+        elif not client:
+            pass # warn here when logger in.
 
 
     # Magic
@@ -34,53 +38,18 @@ class Resource:
 
     # Private
 
-    def _validation(self):
-        """checks for illegal chars and more soon"""
+    def _apply_options(self):
+        """sends data through applicator object to have options applied"""
 
-        if self.options.ignore_illegal_chars:
+        if not self.options:
             return
-
-        for i in self._data:
-            if any(c in self._data[i]["name"] for c in ILLEGAL_NAME_CHARS):
-                raise DataError(f"illegal char found in {self.resource_type}: {self._data[i]}")
-
-
-    def _options(self):
-        """application of options object"""
-
-        if self.options is None:
-            return
-
-        self._options_remove_duplicates()
-        self._options_name_change()
-
-
-    def _options_remove_duplicates(self):
-        """removes dupes"""
-
-        if len(self.options.exclude_ids) > 0:
-            to_delete = []
-            for i in self._data:
-                if int(self._data[i]["id"]) in self.options.exclude_ids:
-                    to_delete.append(i)
-
-            for i in to_delete:
-                del self._data[i]
-
-
-    def _options_name_change(self):
-        """changes name"""
-
-        if self.options.use_resource_type_as_name:
-            count = 0
-            for i in self._data:
-                self._data[i]["name"] = f"{self.resource_type}-{count}"
-                count += 1
-
+        
+        self.data = self.applicator.apply(self.data, self.options)
+   
 
     def _get(self):
         """
-        Retrieves data from api and should always populate self._data with:
+        Retrieves data from api and should always populate self.data with:
         {
             "jamfpro_resourcename.id": {
                 "id": X,
@@ -96,6 +65,7 @@ class Resource:
 
     def set_client(self, client: jamfpy.JamfTenant):
         """function to wrap setting of object bound client"""
+
         assert isinstance(client, jamfpy.JamfTenant), "invalid client type"
         self.client = client
 
@@ -103,16 +73,15 @@ class Resource:
     def refresh_data(self):
         """refreshes data held by object from api"""
         if self.client is None:
-            raise ImporterConfigError("no client provided.Provide client via object creation or .set_client(client)")
+            raise ImporterConfigError("no client provided. Provide client via object creation or .set_client(client)")
 
         self._get()
-        self._options()
-        self._validation()
+        self._apply_options()
 
 
     def build_hcl(self):
         """Generates HCL for all Script attrs"""
-        return generate_imports(self.resource_type, self._data)
+        return generate_imports(self.resource_type, self.data)
 
 
 class Scripts(Resource):
@@ -121,7 +90,7 @@ class Scripts(Resource):
 
     def _get(self):
         """
-        Retrieves data from api and should always populate self._data with:
+        Retrieves data from api and should always populate self.data with:
         {
             "name.id": {
                 "id": id,
@@ -135,7 +104,7 @@ class Scripts(Resource):
             raise HTTPError("bad api call")
 
         for i in data:
-            self._data[f"{i['name']}.{i['id']}"] = {
+            self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
                 "name": i["name"],
             }
@@ -152,7 +121,7 @@ class Categories(Resource):
             raise HTTPError("bad api call")
 
         for i in resp.json()["categories"]:
-            self._data[f"{i['name']}.{i['id']}"] = {
+            self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
                 "name": i["name"]
             }
