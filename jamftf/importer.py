@@ -51,7 +51,7 @@ class Importer:
             with open(fp, "r") as f:
                 pretty_hcl = f.read()
 
-            # os.remove(fn)
+            os.remove(fp)
 
             out = pretty_hcl
 
