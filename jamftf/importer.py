@@ -9,7 +9,7 @@ class Importer:
     """object for managing all targetted resources"""
 
     targetted: list[Resource] = None
-    def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource], global_options: Options = None):
+    def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource]):
 
         assert isinstance(client, jamfpy.JamfTenant), "incorrect client type"
 
@@ -17,15 +17,6 @@ class Importer:
             raise ImporterConfigError("no targets set")
 
         for t in targetted:
-            if global_options is not None:
-                global_options_dict = global_options.options()
-                for k in global_options_dict:
-                    if k in t.options.options():
-                        raise OptionsConflictError(f"conflicting option: {k}")
-                    
-                    t.options.add(k, global_options_dict[k])
-
-
             t.set_client(client)
             t.refresh_data()
 
