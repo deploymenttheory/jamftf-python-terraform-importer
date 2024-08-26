@@ -16,8 +16,6 @@ RESOURCE_TYPE_OBJECT_MAP = {
     "jamfpro_category": Categories
 }
 
-
-
 VALID_CONFIG_KEYS = [
     "active", 
     "use_resource_type_as_name",
@@ -39,19 +37,23 @@ def parse_config_file(config_json: dict) -> List[Resource]:
         if rk not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {rk}")
 
-        # Invalid option key // TODO refactor this to extract better logging
-        if any(i not in VALID_CONFIG_KEYS for i in config_json[rk]):
-            raise DataError("invalid options key found")
+        # Invalid option key
+        for i in config_json[rk]:
+            if i not in VALID_CONFIG_KEYS:
+                raise(DataError(f"invalid config key: {i}"))
         
-        # Required keys + refactor as above.
-        if any(i not in config_json[rk] for i in REQUIRED_CONFIG_KEYS):
-            raise DataError("missing required key")
+        # Required option keys
+        for i in REQUIRED_CONFIG_KEYS:
+            if i not in config_json[rk]:
+                raise DataError(f"missing required config key: {i}")
 
         # Resource not set to active
         if not config_json[rk]["active"]:
             continue
 
-        opts = Options(_from_json=config_json[rk])
+        opts = Options()
+        opts.from_json(config_json[rk])
+
         out.append(
             RESOURCE_TYPE_OBJECT_MAP[rk](options=opts)
         )
