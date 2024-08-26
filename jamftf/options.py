@@ -70,6 +70,10 @@ class Applicator:
     def exclude_ids(self, data: dict) -> dict:
         """removes any IDs from the data which have been specifid to be excluded"""
         
+        if self.resource_type not in self.opts["exclude_ids"]:
+            # warn
+            return
+
         to_delete = []
         for i in data:
             if int(data[i]["id"]) in self.opts["exclude_ids"][self.resource_type]:
