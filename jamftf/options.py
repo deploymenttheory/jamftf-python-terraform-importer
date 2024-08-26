@@ -48,7 +48,7 @@ class Applicator:
     def apply(self, data: dict):
         OPTIONS_MASTER = {
             "exclude_ids": self.exclude_ids,
-            "use_resource_type_as_name": self.use_resource_type_as_name,
+            "use_resource_type_as_name": self._use_resource_type_as_name,
         }
 
         for o in self.opts:
@@ -69,6 +69,8 @@ class Applicator:
     def exclude_ids(self, data: dict) -> dict:
         """removes any IDs from the data which have been specifid to be excluded"""
         
+        print(self.resource_type)
+        print(self.opts)
 
         if self.resource_type not in self.opts["exclude_ids"].keys():
             raise DataError(f"no exclusions specified for {self.resource_type}")
@@ -84,7 +86,7 @@ class Applicator:
         return data
 
 
-    def use_resource_type_as_name(self, data: dict) -> dict:
+    def _use_resource_type_as_name(self, data: dict) -> dict:
         """change the names of all resources held in data to resource_name.XX"""
 
         counter = 0
