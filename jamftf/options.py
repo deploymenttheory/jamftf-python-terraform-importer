@@ -51,6 +51,8 @@ class Applicator:
             "use_resource_type_as_name": self._use_resource_type_as_name,
         }
 
+        print("HERE")
+
         for o in self.opts:
             if self.opts[o]:
                 data = OPTIONS_MASTER[o](data)
