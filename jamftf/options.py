@@ -70,7 +70,7 @@ class Applicator:
         """removes any IDs from the data which have been specifid to be excluded"""
         
 
-        if self.resource_type not in self.opts["exclude_ids"]:
+        if self.resource_type not in self.opts["exclude_ids"].keys():
             raise DataError(f"no exclusions specified for {self.resource_type}")
         
         to_delete = []
