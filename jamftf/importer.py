@@ -1,11 +1,31 @@
 """main importer object"""
 from typing import List
 import jamfpy
-from .exceptions import ImporterConfigError, OptionsConflictError
+from .exceptions import ImporterConfigError
 from .resources import Resource
 
 class Importer:
-    """object for managing all targetted resources"""
+    """
+    A class for managing and importing targeted resources from a Jamf tenant.
+
+    This class handles the initialization, refreshing, and HCL generation for a collection
+    of Resource objects associated with a Jamf tenant.
+
+    Attributes:
+        targetted (List[Resource]): A list of Resource objects to be managed.
+
+    Args:
+        client (jamfpy.JamfTenant): The Jamf tenant client used for API interactions.
+        targetted (List[Resource]): A list of Resource objects to be managed.
+
+    Raises:
+        AssertionError: If the provided client is not an instance of jamfpy.JamfTenant.
+        ImporterConfigError: If the targetted list is empty.
+
+    Methods:
+        Refresh(): Refreshes the data for all targeted resources.
+        HCL(): Generates HCL (HashiCorp Configuration Language) for all targeted resources.
+    """
 
     targetted: list[Resource] = None
     def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource]):

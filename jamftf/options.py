@@ -7,12 +7,12 @@ class Options:
     def __init__(
             self,
             use_resource_type_as_name = False,
-            exclude_ids: list = None,
+            exclude_ids: dict = None,
         ):
         
         self.out = {}
         self.use_resource_type_as_name = use_resource_type_as_name
-        self.exclude_ids = exclude_ids or []
+        self.exclude_ids = exclude_ids or {}
 
 
 
@@ -70,7 +70,7 @@ class Applicator:
         """removes any IDs from the data which have been specifid to be excluded"""
         to_delete = []
         for i in data:
-            if int(data[i]["id"]) in self.opts["exclude_ids"]:
+            if int(data[i]["id"]) in self.opts["exclude_ids"][self.resource_type]:
                 to_delete.append(i)
 
         for i in to_delete:
