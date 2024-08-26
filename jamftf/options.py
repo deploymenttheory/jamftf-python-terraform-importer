@@ -52,8 +52,10 @@ class Applicator:
         }
 
         print("FLAG-1")
+        print(self.opts)
 
         for o in self.opts:
+            print("FLAG-LOOP")
             if self.opts[o]:
                 data = OPTIONS_MASTER[o](data)
 
