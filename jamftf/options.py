@@ -72,7 +72,7 @@ class Applicator:
         
         if self.resource_type not in self.opts["exclude_ids"]:
             # warn
-            return
+            return data
 
         to_delete = []
         for i in data:
