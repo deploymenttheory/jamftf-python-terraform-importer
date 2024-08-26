@@ -69,11 +69,10 @@ class Applicator:
     def exclude_ids(self, data: dict) -> dict:
         """removes any IDs from the data which have been specifid to be excluded"""
         
-        print(self.resource_type)
-        print(self.opts)
-
-        if self.resource_type not in self.opts["exclude_ids"].keys():
+        if self.resource_type not in self.opts["exclude_ids"]:
             raise DataError(f"no exclusions specified for {self.resource_type}")
+        else:
+            raise Exception("I don't know")
         
         to_delete = []
         for i in data:
