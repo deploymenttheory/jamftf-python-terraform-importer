@@ -51,13 +51,10 @@ class Applicator:
             "use_resource_type_as_name": self._use_resource_type_as_name,
         }
 
-        print("FLAG-1")
-        print(self.opts)
-
         for o in self.opts:
-            print("FLAG-LOOP")
             if self.opts[o]:
                 data = OPTIONS_MASTER[o](data)
+
 
         if self.validate:
             self._validation(data)
@@ -72,14 +69,9 @@ class Applicator:
 
     def exclude_ids(self, data: dict) -> dict:
         """removes any IDs from the data which have been specifid to be excluded"""
-        print("FLAG-2")
         
         if self.resource_type not in self.opts["exclude_ids"]:
-            print("FLAG-3")
             raise DataError(f"no exclusions specified for {self.resource_type}")
-        else:
-            print("FLAG-4")
-            raise Exception("I don't know")
         
         to_delete = []
         for i in data:
