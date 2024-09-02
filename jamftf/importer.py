@@ -40,6 +40,7 @@ class Importer:
             t.refresh_data()
 
         self.targetted = targetted
+        self.logger = jamfpy.get_logger()
 
 
     def Refresh(self):
