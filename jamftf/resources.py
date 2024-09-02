@@ -12,13 +12,15 @@ class Resource:
     """parent obj for resources"""
     resource_type = ""
 
-    def __init__(self, options: Options = None, validate: bool = True, client: jamfpy.JamfTenant = None):
+    def __init__(self, options: Options = None, validate: bool = True, client: jamfpy.JamfTenant = None, log_level: int = 20):
         if not self.resource_type:
             raise InvalidResourceTypeError(f"Instantiate a specific resource type and not the parent {self.resource_type}")
 
         self.data = {}
         self.options = options if options is not None else Options()
         self.applicator = Applicator(self.resource_type, opts=self.options.options(), validate=validate)
+        self.client = client
+        self.logger = jamfpy.get_logger(f"Resource - {self.resource_type}", log_level)
         
 
     # Magic
@@ -35,6 +37,7 @@ class Resource:
    
 
     def _get(self):
+        self.logger.info(f"getting data for resource type: {self.resource_type}")
         """
         Retrieves data from api and should always populate self.data with:
         {
@@ -45,13 +48,15 @@ class Resource:
         }
         """
 
-        raise ImporterConfigError("operation invalid at Resource level. Please define a resource type")
+        if isinstance(self, Resource):
+            raise ImporterConfigError("operation invalid at Resource level. Please define a resource type")
 
 
     # Public
 
     def set_client(self, client: jamfpy.JamfTenant, refresh_data: bool = False):
         """function to wrap setting of object bound client"""
+        self.logger.info("setting client...")
 
         assert isinstance(client, jamfpy.JamfTenant), "invalid client type"
         self.client = client
@@ -71,6 +76,8 @@ class Resource:
 
     def refresh_data(self):
         """refreshes data held by object from api"""
+        self.logger.info("refreshing cached data...")
+
         if self.client is None:
             raise ImporterConfigError("no client provided. Provide client via object creation or .set_client(client)")
 
@@ -88,6 +95,7 @@ class Scripts(Resource):
     resource_type = RESOURCE_TYPES["script"]
 
     def _get(self):
+        super()._get()
         """
         Retrieves data from api and should always populate self.data with:
         {
@@ -114,6 +122,7 @@ class Categories(Resource):
     resource_type = RESOURCE_TYPES["category"]
 
     def _get(self):
+        super()._get()
         resp = self.client.classic.categories.get_all()
 
         if not resp.ok:
