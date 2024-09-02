@@ -37,7 +37,6 @@ class Resource:
    
 
     def _get(self):
-        self.logger.info(f"getting data for resource type: {self.resource_type}")
         """
         Retrieves data from api and should always populate self.data with:
         {
@@ -95,7 +94,7 @@ class Scripts(Resource):
     resource_type = RESOURCE_TYPES["script"]
 
     def _get(self):
-        super()._get()
+        self.logger.info(f"getting data for resource type: {self.resource_type}")
         """
         Retrieves data from api and should always populate self.data with:
         {
@@ -122,7 +121,8 @@ class Categories(Resource):
     resource_type = RESOURCE_TYPES["category"]
 
     def _get(self):
-        super()._get()
+        self.logger.info(f"getting data for resource type: {self.resource_type}")
+        
         resp = self.client.classic.categories.get_all()
 
         if not resp.ok:
