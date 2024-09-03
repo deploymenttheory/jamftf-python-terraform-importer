@@ -20,7 +20,7 @@ RESOURCE_TYPE_OBJECT_MAP = {
 
 VALID_CONFIG_KEYS = [
     "active", 
-    "validate"
+    "validate",
     "use_resource_type_as_name",
     "exclude_ids",
     "ignore_illegal_characters"
