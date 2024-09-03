@@ -3,6 +3,7 @@ from typing import List
 import jamfpy
 from .exceptions import ImporterConfigError
 from .resources import Resource
+from logging import Logger
 
 class Importer:
     """
@@ -28,7 +29,15 @@ class Importer:
     """
 
     targetted: list[Resource] = None
-    def __init__(self, client: jamfpy.JamfTenant, targetted: List[Resource]):
+    def __init__(
+            self, 
+            client: jamfpy.JamfTenant, 
+            targetted: List[Resource], 
+            logger: Logger = None,
+            log_level: int = 10,
+        ):
+
+        self.logger = logger or jamfpy.get_logger(name="Importer", level=log_level)
 
         assert isinstance(client, jamfpy.JamfTenant), "incorrect client type"
 
@@ -40,7 +49,8 @@ class Importer:
             t.refresh_data()
 
         self.targetted = targetted
-        self.logger = jamfpy.get_logger()
+        
+
 
 
     def Refresh(self):

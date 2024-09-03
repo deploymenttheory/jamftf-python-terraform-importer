@@ -1,6 +1,9 @@
 """home of options"""
 from .constants import ILLEGAL_NAME_CHARS
 from .exceptions import DataError
+from logging import Logger
+from jamfpy import get_logger
+from random import randint
 
 class Options:
     """Options is a small framework for generating options schemas"""
@@ -31,22 +34,39 @@ class Applicator:
     """
     Applicator holds interfaced methods for applying options form json schema
     """
-    def __init__(self, resource_type, opts, validate):
+    def __init__(
+            self, 
+            resource_type: str, 
+            opts: dict, 
+            validate: bool,
+            logger: Logger
+        ):
+
         self.opts = opts
         self.resource_type = resource_type
         self.validate = validate
+        self.lg = logger
+
 
 
     def apply(self, data: dict):
+        self.lg.info("applying options...")
+
         OPTIONS_MASTER = {
             "exclude_ids": self.exclude_ids,
             "use_resource_type_as_name": self._use_resource_type_as_name,
         }
+        
 
         for o in self.opts:
+            self.lg.debug(f"handling {o}...")
+
             if self.opts[o]:
+                self.lg.debug(f"{o} flagged to be set")
+
                 data = OPTIONS_MASTER[o](data)
 
+                self.lg.info(f"{o} set for {self.resource_type}")
 
         if self.validate:
             self._validation(data)
@@ -55,6 +75,10 @@ class Applicator:
     
 
     def _validation(self, data):
+        """_validation is a parent func for running data validation functions"""
+
+        self.lg.debug("validating data...")
+
         self._check_illegal_chars(data)
         self._check_duplicates(data)
 
@@ -63,14 +87,17 @@ class Applicator:
         """removes any IDs from the data which have been specifid to be excluded"""
         
         if self.resource_type not in self.opts["exclude_ids"]:
-            # warn
+            self.lg.warn(f"{self.resource_type} not in exclude IDs")
             return data
 
         to_delete = []
         for i in data:
-            if int(data[i]["id"]) in self.opts["exclude_ids"][self.resource_type]:
+            res_id = int(data[i]["id"])
+            if res_id in self.opts["exclude_ids"][self.resource_type]:
+                self.lg.debug(f"{res_id} marked for deletion")
                 to_delete.append(i)
 
+        self.lg.debug("deleting excluded records")
         for i in to_delete:
             del data[i]
 
@@ -79,6 +106,7 @@ class Applicator:
 
     def _use_resource_type_as_name(self, data: dict) -> dict:
         """change the names of all resources held in data to resource_name.XX"""
+        self.lg.debug("amending resource names...")
 
         counter = 0
         for i in data:
@@ -90,6 +118,8 @@ class Applicator:
 
     def _check_illegal_chars(self, data: dict):
         """sweeps resource names for chars invalid in HCL"""
+        self.lg.debug(f"checking for illegal chars: {ILLEGAL_NAME_CHARS}")
+
         for i in data:
             for c in data[i]["name"]:
                 if c in ILLEGAL_NAME_CHARS:
@@ -98,6 +128,9 @@ class Applicator:
 
     def _check_duplicates(self, data: dict):
         """iterates through all resource names ensuring no duplicates"""
+        self.lg.debug("checking for duplicates")
+
+
         keys = {}
         for i in data:
             name = data[i]["name"]
