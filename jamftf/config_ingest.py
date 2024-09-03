@@ -37,12 +37,6 @@ def parse_config_file(config_json: dict) -> List[Resource]:
     resources = config_json["resources"]
     for rk in resources:
 
-        # Validation
-        # Valid Resource Types only
-        # Valid option keys
-        # Required keys not missing
-        # Skips inactive resources
-
         if rk not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {rk}")
 
@@ -57,7 +51,7 @@ def parse_config_file(config_json: dict) -> List[Resource]:
         if not resources[rk]["active"]:
             continue
 
-        opts = Options().from_json(resources[rk])
+        opts = Options().from_json(resources)
         validate = resources[rk]["validate"]
         assert isinstance(validate, bool), "validate key is not a bool"
 

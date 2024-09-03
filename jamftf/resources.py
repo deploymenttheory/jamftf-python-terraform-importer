@@ -82,7 +82,7 @@ class Resource:
             raise InvalidResourceTypeError(f"Instantiate a specific resource type and not the parent {self.resource_type}")
 
 
-    def _apply_options(self):
+    def apply_options(self):
         """sends data through applicator object to have options applied""" 
         self.lg.debug("applying options...")       
         self.data = self.applicator.apply(self.data)
@@ -146,7 +146,7 @@ class Resource:
         self.lg.debug("options set successfully")
         
         if apply:
-            self._apply_options()
+            self.apply_options()
 
 
     def refresh_data(self):
@@ -157,7 +157,7 @@ class Resource:
             raise ImporterConfigError("no client provided. Provide client via object creation or .set_client(client)")
 
         self._get()
-        self._apply_options()
+        self.apply_options()
 
 
     def build_hcl(self):
