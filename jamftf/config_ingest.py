@@ -26,7 +26,8 @@ VALID_CONFIG_KEYS = [
 ]
 
 REQUIRED_CONFIG_KEYS = [
-    "active"
+    "active",
+    "validate"
 ]
 
 def parse_config_file(config_json: dict) -> List[Resource]:
@@ -57,7 +58,7 @@ def parse_config_file(config_json: dict) -> List[Resource]:
         opts.from_json(config_json[rk])
 
         out.append(
-            RESOURCE_TYPE_OBJECT_MAP[rk](options=opts)
+            RESOURCE_TYPE_OBJECT_MAP[rk](options=opts, validate=config_json[rk]["validate"])
         )
 
 
