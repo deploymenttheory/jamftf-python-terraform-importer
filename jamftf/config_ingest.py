@@ -57,6 +57,7 @@ def parse_config_file(config_json: dict) -> List[Resource]:
 
         opts = Options()
         opts.from_json(config_json[rk])
+        print(config_json)
 
         out.append(
             RESOURCE_TYPE_OBJECT_MAP[rk](options=opts, validate=config_json[rk]["validate"])
