@@ -98,10 +98,11 @@ class Resource:
     # Public
     
     def set_debug(self, debug: bool):
+        """overrides log level to debug for all handlers"""
         level = self._init_log_level(debug)
-        self.lg.setLevel(level)
         for i in self.lg.handlers:
             i.setLevel(level)
+
         self.lg.info(f"log level has been overridden to: {self.lg.level}")
 
 
