@@ -60,7 +60,7 @@ class Resource:
         assert isinstance(debug, bool), "debug flag is not bool"
 
         log_levels = {
-            True: 10,
+            True: 0,
             False: 20,
         }
 
@@ -98,7 +98,7 @@ class Resource:
     
     def set_debug(self, debug: bool):
         self.lg.level = self._init_log_level(debug)
-        
+
 
     def set_client(self, client: jamfpy.JamfTenant, refresh_data: bool = False):
         """function to wrap setting of object bound client"""
