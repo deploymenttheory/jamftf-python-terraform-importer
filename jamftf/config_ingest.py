@@ -21,12 +21,12 @@ RESOURCE_TYPE_OBJECT_MAP = {
 def parse_config_file(config_json: dict) -> List[Resource]:
     """parses a config file"""
     out = []
-    exclude = {}
+    exclude_block = {}
 
     if "exclude_ids" in config_json:
-        exclude = config_json["exclude_ids"]
+        exclude_block = config_json["exclude_ids"]
 
-        for rk in exclude:
+        for rk in exclude_block:
             if rk not in ALL_RESOURCE_TYPES:
                 raise DataError("invalid resource key in exclude block")
             
@@ -35,7 +35,7 @@ def parse_config_file(config_json: dict) -> List[Resource]:
 
 
     resources = config_json["resources"]
-    for r in resources:
+    for rk in resources:
 
         # Validation
         # Valid Resource Types only
@@ -43,29 +43,29 @@ def parse_config_file(config_json: dict) -> List[Resource]:
         # Required keys not missing
         # Skips inactive resources
 
-        if r not in ALL_RESOURCE_TYPES:
-            raise InvalidResourceTypeError(f"invalid resource type: {r}")
+        if rk not in ALL_RESOURCE_TYPES:
+            raise InvalidResourceTypeError(f"invalid resource type: {rk}")
 
-        for i in resources[r]:
+        for i in resources[rk]:
             if i not in VALID_CONFIG_KEYS:
                 raise DataError(f"invalid config key: {i}")
         
         for i in REQUIRED_CONFIG_FLAGS:
-            if i not in resources[r]:
+            if i not in resources[rk]:
                 raise DataError(f"missing required config key: {i}")
 
-        if not resources[r]["active"]:
+        if not resources[rk]["active"]:
             continue
 
-        opts = Options().from_json(resources[r])
-        validate = resources[r]["validate"]
+        opts = Options().from_json(resources[rk])
+        validate = resources[rk]["validate"]
         assert isinstance(validate, bool), "validate key is not a bool"
 
-        resource: Resource
-        resource = RESOURCE_TYPE_OBJECT_MAP[r](options=opts, validate=validate)
+        exclude_ids = []
+        if rk in exclude_block:
+            exclude_ids = exclude_block[rk]
 
-        if r in exclude:
-            resource.set_exclude(exclude[r])
+        resource = RESOURCE_TYPE_OBJECT_MAP[rk](options=opts, validate=validate, exclude=exclude_ids)
             
         out.append(resource)
 

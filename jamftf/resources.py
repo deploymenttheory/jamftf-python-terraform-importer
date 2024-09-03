@@ -108,11 +108,6 @@ class Resource:
 
 
     # Public
-
-    def set_exclude(self, ids_list: list[int]):
-        self.lg.debug("manually setting exclude list")
-        
-        self.exclude = ids_list
     
     def set_debug(self, debug: bool):
         """overrides log level to debug for all handlers"""
