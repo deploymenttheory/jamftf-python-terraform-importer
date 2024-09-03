@@ -1,5 +1,6 @@
 """home of options"""
 from .constants import ILLEGAL_NAME_CHARS
+from .config_ingest import REQUIRED_CONFIG_KEYS
 from .exceptions import DataError
 from logging import Logger
 from jamfpy import get_logger
@@ -26,9 +27,6 @@ class Options:
 
     def from_json(self, data: dict):
         self.out = data
-        to_remove = ["active", "validate"]
-        for k in to_remove:
-            del self.out[k]
 
         
 
@@ -61,14 +59,15 @@ class Applicator:
         
 
         for o in self.opts:
-            self.lg.debug(f"handling {o}...")
+            if o not in REQUIRED_CONFIG_KEYS:
+                self.lg.debug(f"handling {o}...")
 
-            if self.opts[o]:
-                self.lg.debug(f"{o} flagged to be set")
+                if self.opts[o]:
+                    self.lg.debug(f"{o} flagged to be set")
 
-                data = OPTIONS_MASTER[o](data)
+                    data = OPTIONS_MASTER[o](data)
 
-                self.lg.info(f"{o} set for {self.resource_type}")
+                    self.lg.info(f"{o} set for {self.resource_type}")
 
         if self.validate:
             self._validation(data)
