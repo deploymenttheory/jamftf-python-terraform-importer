@@ -8,7 +8,8 @@ RESOURCE_TYPES = {
     "script": "jamfpro_script",
     "category": "jamfpro_category",
     "department": "jamfpro_department",
-    "policy": "jamfpro_policy"
+    "policy": "jamfpro_policy",
+    "osx_config_profile": "jamfpro_macos_configuration_profile_plist"
 }
 
 ALL_RESOURCE_TYPES = list(RESOURCE_TYPES.values())

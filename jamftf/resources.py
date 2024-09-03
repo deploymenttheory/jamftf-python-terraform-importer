@@ -221,3 +221,22 @@ class Policies(Resource):
                 "id": i["id"],
                 "name": i["name"]
             }
+
+class ConfigurationProfile(Resource):
+    """osx config profile"""
+    resource_type = RESOURCE_TYPES["osx_config_profile"]
+
+    def _get(self):
+        self._log_get()
+
+        resp = self.client.classic.configuration_profiles.get_all()
+
+        if not resp.ok:
+            raise HTTPError("bad api call")
+        
+        for i in resp.json()["os_x_configuration_profiles"]:
+            self.data[f"{i['name']}.{i['id']}"] = {
+                "id": i["id"],
+                "name": i["name"]
+            }     
+

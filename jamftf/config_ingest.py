@@ -6,14 +6,16 @@ from .exceptions import InvalidResourceTypeError, DataError
 from .resources import (
     Resource,
     Scripts,
-    Categories
+    Categories,
+    Policies
 )
 from .options import Options
 
 
 RESOURCE_TYPE_OBJECT_MAP = {
     "jamfpro_script": Scripts,
-    "jamfpro_category": Categories
+    "jamfpro_category": Categories,
+    "jamfpro_policy": Policies
 }
 
 VALID_CONFIG_KEYS = [
