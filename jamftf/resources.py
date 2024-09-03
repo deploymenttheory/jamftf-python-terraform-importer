@@ -60,11 +60,11 @@ class Resource:
         assert isinstance(debug, bool), "debug flag is not bool"
 
         log_levels = {
-            True: 0,
-            False: 20,
+            "True": 10,
+            "False": 20,
         }
 
-        return log_levels[debug]
+        return log_levels[str(debug)]
 
 
     def _validate_resource_type(self):
