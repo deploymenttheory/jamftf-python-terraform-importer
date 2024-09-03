@@ -222,6 +222,7 @@ class Policies(Resource):
                 "name": i["name"]
             }
 
+
 class ConfigurationProfile(Resource):
     """osx config profile"""
     resource_type = RESOURCE_TYPES["osx_config_profile"]
@@ -229,7 +230,7 @@ class ConfigurationProfile(Resource):
     def _get(self):
         self._log_get()
 
-        resp = self.client.classic.configuration_profiles.get_all()
+        resp = self.client.classic.configuration_profiles.get_all("json")
 
         if not resp.ok:
             raise HTTPError("bad api call")
