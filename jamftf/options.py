@@ -1,6 +1,5 @@
 """home of options"""
-from .constants import ILLEGAL_NAME_CHARS
-from .config_ingest import REQUIRED_CONFIG_KEYS
+from .constants import ILLEGAL_NAME_CHARS, REQUIRED_CONFIG_KEYS
 from .exceptions import DataError
 from logging import Logger
 from jamfpy import get_logger

@@ -14,3 +14,7 @@ RESOURCE_TYPES = {
 
 ALL_RESOURCE_TYPES = list(RESOURCE_TYPES.values())
 
+REQUIRED_CONFIG_KEYS = [
+    "active",
+    "validate"
+]

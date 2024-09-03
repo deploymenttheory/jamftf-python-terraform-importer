@@ -1,7 +1,7 @@
 """manages configuration injest"""
 
 from typing import List
-from .constants import ALL_RESOURCE_TYPES
+from .constants import ALL_RESOURCE_TYPES, REQUIRED_CONFIG_KEYS
 from .exceptions import InvalidResourceTypeError, DataError
 from .resources import (
     Resource,
@@ -26,10 +26,7 @@ VALID_CONFIG_KEYS = [
     "ignore_illegal_characters"
 ]
 
-REQUIRED_CONFIG_KEYS = [
-    "active",
-    "validate"
-]
+
 
 def parse_config_file(config_json: dict) -> List[Resource]:
     """parses a config file"""
