@@ -62,6 +62,8 @@ class Importer:
         for i in hcld:
             out += hcld[i] + "\n"
 
+        return out
+
     def HCLd(self):
         """generates hcl on every targetted object"""
         out = {}
