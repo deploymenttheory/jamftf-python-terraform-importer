@@ -97,7 +97,7 @@ class Resource:
     # Public
     
     def set_debug(self, debug: bool):
-        self.lg.level = self._init_log_level(debug)
+        self.lg.setLevel(self._init_log_level(debug))
 
 
     def set_client(self, client: jamfpy.JamfTenant, refresh_data: bool = False):
