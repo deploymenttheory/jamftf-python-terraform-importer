@@ -87,6 +87,7 @@ class Resource:
         self.lg.debug("applying options...")       
         self.data = self.applicator.apply(self.data)
 
+
     def _log_get(self):
         """standardises log for getting data"""
         self.lg.info(f"getting data for resource type: {self.resource_type}")

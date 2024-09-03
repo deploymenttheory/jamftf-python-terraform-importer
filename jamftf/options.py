@@ -56,7 +56,7 @@ class Applicator:
         self.lg.info("applying options...")
 
         OPTIONS_MASTER = {
-            "use_resource_type_as_name": self._use_resource_type_as_name,
+            "use_resource_type_as_name": self._use_resource_type_as_name
         }
 
         for o in self.opts:
