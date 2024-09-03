@@ -58,7 +58,7 @@ def parse_config_file(config_json: dict) -> List[Resource]:
             continue
 
         opts = Options().from_json(resources[r])
-        validate = config_json[r][validate]
+        validate = resource[r][validate]
         assert isinstance(validate, bool), "validate key is not a bool"
 
         resource: Resource
@@ -68,9 +68,6 @@ def parse_config_file(config_json: dict) -> List[Resource]:
             resource.set_exclude(exclude[r])
             
         out.append(resource)
-
-
-    exclude = config_json["exclude_ids"]
 
 
     return out
