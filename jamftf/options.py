@@ -96,16 +96,12 @@ class Applicator:
     def _exclude_ids(self, data: dict) -> dict:
         """removes any IDs from the data which have been specifid to be excluded"""
         
-        if self.resource_type not in self.exclude_ids:
-            self.lg.warn(f"{self.resource_type} not in exclude IDs")
-            return data
-
         to_delete = []
         for i in data:
 
             res_id = int(data[i]["id"])
 
-            if res_id in self.exclude_ids[self.resource_type]:
+            if res_id in self.exclude_ids:
 
                 self.lg.debug(f"{res_id} marked for deletion")
 

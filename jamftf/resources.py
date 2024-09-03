@@ -33,6 +33,7 @@ class Resource:
         self.data = {}
         
         self.client = client
+        self.exclude = exclude
 
         self.lg.info(f"resource initilized: {self.resource_type}")
 
@@ -48,7 +49,13 @@ class Resource:
     def _init_applicator(self, log_level, validate):
         """init_applicator initilizes an applicator and adds a logger"""
         logger = jamfpy.get_logger(f"applicator({self.resource_type})", level=log_level)
-        self.applicator = Applicator(self.resource_type, opts=self.options.options(), validate=validate, logger=logger)
+        self.applicator = Applicator(
+            self.resource_type, 
+            opts=self.options.options(), 
+            validate=validate, 
+            logger=logger,
+            exclude_ids=self.exclude
+        )
 
 
     def _init_logger(self, log_level: int):
