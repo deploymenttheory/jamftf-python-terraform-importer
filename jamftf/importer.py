@@ -56,11 +56,20 @@ class Importer:
         for t in self.targetted:
             t.refresh_data()
 
-
-    def HCL(self):
-        """generates hcl on every targetted object"""
+    def HCLs(self):
         out = ""
+        hcld = self.HCLd()
+        for i in hcld:
+            out += hcld[i] + "\n"
+
+    def HCLd(self):
+        """generates hcl on every targetted object"""
+        out = {}
         for r in self.targetted:
-            out += "\n" + "\n".join(r.build_hcl())
+            if r.resource_type not in out:
+                out[r.resource_type] = ""
+
+            out[r.resource_type] += "\n" + "\n".join(r.build_hcl())
+
 
         return out
