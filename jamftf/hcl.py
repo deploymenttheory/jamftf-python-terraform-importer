@@ -7,7 +7,7 @@ def import_block(resource_type, name, jpro_id):
     Constructs a valid import block using the resource type, name and server id.
     """
 
-    return "import {\n\tid = " + str(jpro_id) + "\n\tto = " + f"{resource_type}.{name}" + "\n}\n"
+    return "import {\nid = " + str(jpro_id) + "\nto = " + f"{resource_type}.{name}" + "\n}\n"
 
 
 def generate_imports(resource_type: str, resources: dict) -> list:
