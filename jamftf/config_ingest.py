@@ -51,7 +51,7 @@ def parse_config_file(config_json: dict) -> List[Resource]:
         if not resources[rk]["active"]:
             continue
 
-        opts = Options().from_json(resources)
+        opts = Options().from_json(resources[rk])
         validate = resources[rk]["validate"]
         assert isinstance(validate, bool), "validate key is not a bool"
 
