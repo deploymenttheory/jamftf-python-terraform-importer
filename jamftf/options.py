@@ -27,6 +27,7 @@ class Options:
 
     def from_json(self, data: dict):
         self.out = data
+        return self
 
         
 
