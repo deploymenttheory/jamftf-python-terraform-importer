@@ -1,7 +1,7 @@
 """manages configuration injest"""
 
 from typing import List
-from .constants import ALL_RESOURCE_TYPES, REQUIRED_CONFIG_KEYS
+from .constants import ALL_RESOURCE_TYPES, REQUIRED_CONFIG_FLAGS, VALID_CONFIG_KEYS
 from .exceptions import InvalidResourceTypeError, DataError
 from .resources import (
     Resource,
@@ -18,38 +18,36 @@ RESOURCE_TYPE_OBJECT_MAP = {
     "jamfpro_policy": Policies
 }
 
-VALID_CONFIG_KEYS = [
-    "active", 
-    "validate",
-    "use_resource_type_as_name",
-    "exclude_ids",
-    "ignore_illegal_characters"
-]
+
 
 
 
 def parse_config_file(config_json: dict) -> List[Resource]:
     """parses a config file"""
     out = []
-
     for rk in config_json:
+        # Validation
+        # Valid Resource Types only
+        # Valid option keys
+        # Required keys not missing
 
-        # Invalid resource key
         if rk not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {rk}")
 
-        # Invalid option key
         for i in config_json[rk]:
             if i not in VALID_CONFIG_KEYS:
                 raise(DataError(f"invalid config key: {i}"))
         
-        # Required option keys
-        for i in REQUIRED_CONFIG_KEYS:
+        for i in REQUIRED_CONFIG_FLAGS:
             if i not in config_json[rk]:
                 raise DataError(f"missing required config key: {i}")
 
-        # Resource not set to active
+        # Skips inactive resources
         if not config_json[rk]["active"]:
+            continue
+
+        # Skip these for now but we want the key validated
+        if rk == "exclude_ids":
             continue
 
         opts = Options()
@@ -59,6 +57,8 @@ def parse_config_file(config_json: dict) -> List[Resource]:
         out.append(
             RESOURCE_TYPE_OBJECT_MAP[rk](options=opts, validate=config_json[rk]["validate"])
         )
+
+    exclude = config_json["exclude_ids"]
 
 
     return out

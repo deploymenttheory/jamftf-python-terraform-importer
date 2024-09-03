@@ -14,7 +14,15 @@ RESOURCE_TYPES = {
 
 ALL_RESOURCE_TYPES = list(RESOURCE_TYPES.values())
 
-REQUIRED_CONFIG_KEYS = [
+REQUIRED_CONFIG_FLAGS = [
     "active",
     "validate"
+]
+
+VALID_CONFIG_KEYS = [
+    "active", 
+    "validate",
+    "use_resource_type_as_name",
+    "exclude_ids",
+    "ignore_illegal_characters"
 ]

@@ -17,7 +17,8 @@ class Resource:
             options: Options = None, 
             validate: bool = True, 
             client: jamfpy.JamfTenant = None, 
-            debug: bool = False
+            debug: bool = False,
+            exclude: list[int] = []
         ):
 
         self._validate_resource_type()
