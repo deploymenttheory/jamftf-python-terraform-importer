@@ -26,14 +26,14 @@ class Resource:
         log_level = self._init_log_level(debug)
         self._init_logger(log_level)
 
+        self.data = {}
+        self.client = client
+        self.exclude = exclude
 
         self.options = options if options is not None else Options()
         self._init_applicator(log_level, validate)
 
-        self.data = {}
-        
-        self.client = client
-        self.exclude = exclude
+       
 
         self.lg.info(f"resource initilized: {self.resource_type}")
 
