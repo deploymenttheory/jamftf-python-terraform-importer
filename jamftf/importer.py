@@ -34,7 +34,7 @@ class Importer:
             client: jamfpy.JamfTenant, 
             targetted: List[Resource], 
             logger: Logger = None,
-            log_level: int = 10,
+            debug: bool = False
         ):
 
         self.logger = logger or jamfpy.get_logger(name="Importer", level=log_level)
@@ -45,6 +45,7 @@ class Importer:
             raise ImporterConfigError("no targets set")
 
         for t in targetted:
+            t.set_debug(debug)
             t.set_client(client)
             t.refresh_data()
 
