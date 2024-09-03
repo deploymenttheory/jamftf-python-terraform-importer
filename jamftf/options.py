@@ -110,7 +110,7 @@ class Applicator:
 
         counter = 0
         for i in data:
-            data[i]["name"] = f"{self.resource_type}.{counter}"
+            data[i]["name"] = f"{self.resource_type}_{counter}"
             counter += 1
 
         return data
