@@ -98,7 +98,9 @@ class Resource:
     # Public
     
     def set_debug(self, debug: bool):
-        self.lg.setLevel(10)
+        level = self._init_log_level(debug)
+        self.lg.setLevel(level)
+        self.lg.info(f"log level has been overridden to: {self.lg.level}")
 
 
     def set_client(self, client: jamfpy.JamfTenant, refresh_data: bool = False):
