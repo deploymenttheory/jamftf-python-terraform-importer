@@ -79,6 +79,10 @@ class Resource:
         self.lg.debug("applying options...")       
         self.data = self.applicator.apply(self.data)
 
+    def _log_get(self):
+        """standardises log for getting data"""
+        self.lg.info(f"getting data for resource type: {self.resource_type}")
+
     
     def _get(self):
         """
@@ -158,7 +162,8 @@ class Scripts(Resource):
     resource_type = RESOURCE_TYPES["script"]
 
     def _get(self):
-        self.lg.info(f"getting data for resource type: {self.resource_type}")
+        self._log_get()
+        
         """
         Retrieves data from api and should always populate self.data with:
         {
@@ -181,11 +186,11 @@ class Scripts(Resource):
 
 
 class Categories(Resource):
-    """catagories"""
+    """categories"""
     resource_type = RESOURCE_TYPES["category"]
 
     def _get(self):
-        self.lg.info(f"getting data for resource type: {self.resource_type}")
+        self._log_get()
 
         resp = self.client.classic.categories.get_all()
 
@@ -193,6 +198,25 @@ class Categories(Resource):
             raise HTTPError("bad api call")
 
         for i in resp.json()["categories"]:
+            self.data[f"{i['name']}.{i['id']}"] = {
+                "id": i["id"],
+                "name": i["name"]
+            }
+
+
+class Policies(Resource):
+    """policies"""
+    resource_type = RESOURCE_TYPES["policy"]
+
+    def _get(self):
+        self._log_get()
+
+        resp = self.client.classic.policies.get_all()
+
+        if not resp.ok:
+            raise HTTPError("bad api call")
+        
+        for i in resp.json()["policies"]:
             self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
                 "name": i["name"]

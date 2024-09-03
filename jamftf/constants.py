@@ -7,7 +7,8 @@ ILLEGAL_NAME_CHARS = [".", "/", " "]
 RESOURCE_TYPES = {
     "script": "jamfpro_script",
     "category": "jamfpro_category",
-    "department": "jamfpro_department"
+    "department": "jamfpro_department",
+    "policy": "jamfpro_policy"
 }
 
 ALL_RESOURCE_TYPES = list(RESOURCE_TYPES.values())
