@@ -33,11 +33,8 @@ class Importer:
             self, 
             client: jamfpy.JamfTenant, 
             targetted: List[Resource], 
-            logger: Logger = None,
             debug: bool = False
         ):
-
-        self.logger = logger or jamfpy.get_logger(name="Importer", level=log_level)
 
         assert isinstance(client, jamfpy.JamfTenant), "incorrect client type"
 
