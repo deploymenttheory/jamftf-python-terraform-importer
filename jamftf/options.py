@@ -10,12 +10,10 @@ class Options:
     def __init__(
             self,
             use_resource_type_as_name = False,
-            exclude_ids: dict = None,
         ):
         
         self.out = {}
         self.out["use_resource_type_as_name"] = use_resource_type_as_name
-        self.out["exclude_ids"] = exclude_ids or {}
 
     
     def options(self):
