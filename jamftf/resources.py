@@ -57,6 +57,7 @@ class Resource:
 
     def _init_log_level(self, debug: bool) -> int:
         """init logging implements a simple two level logging approach"""
+
         assert isinstance(debug, bool), "debug flag is not bool"
 
         log_levels = {
@@ -97,7 +98,7 @@ class Resource:
     # Public
     
     def set_debug(self, debug: bool):
-        self.lg.setLevel(self._init_log_level(debug))
+        self.lg.setLevel(10)
 
 
     def set_client(self, client: jamfpy.JamfTenant, refresh_data: bool = False):
