@@ -105,7 +105,7 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
     if RESOURCE_BLOCK_CONFIG_KEY not in config_json:
         raise KeyError("resources block not present in config file")
 
-
+    print(config_json[RESOURCE_BLOCK_CONFIG_KEY].values())
     for k, v in config_json[RESOURCE_BLOCK_CONFIG_KEY].values():
 
         if k not in ALL_RESOURCE_TYPES:
