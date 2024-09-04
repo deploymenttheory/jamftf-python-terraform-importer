@@ -74,7 +74,6 @@ class Applicator:
 
                 self.lg.info(f"{o} set for {self.resource_type}")
 
-        print(self.exclude_ids)
         if self.exclude_ids:
             data = self._exclude_ids(data)
 
@@ -95,9 +94,12 @@ class Applicator:
 
     def _exclude_ids(self, data: dict) -> dict:
         """removes any IDs from the data which have been specifid to be excluded"""
+        self.lg.debug("excluding ids... %s", self.exclude_ids)
 
         to_delete = []
         for i in data:
+
+            self.lg.debug("checking %s", i)
 
             res_id = int(data[i]["id"])
 
