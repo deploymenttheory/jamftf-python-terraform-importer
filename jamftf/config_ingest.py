@@ -107,6 +107,8 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
 
     resource_block: dict
     resource_block = config_json[RESOURCE_BLOCK_CONFIG_KEY]
+    print(config_json)
+    print(resource_block)
     print(resource_block.values())
     for k, v in resource_block.values():
 
