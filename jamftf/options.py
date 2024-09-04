@@ -1,5 +1,5 @@
 """home of options"""
-from .constants import ILLEGAL_NAME_CHARS, REQUIRED_CONFIG_FLAGS, VALID_CONFIG_KEYS
+from .constants import ILLEGAL_NAME_CHARS, REQUIRED_RESOURCE_CONFIG_KEYS, VALID_RESOURCE_CONFIG_KEYS
 from .exceptions import DataError
 from logging import Logger
 from jamfpy import get_logger
@@ -20,7 +20,7 @@ class Options:
         return self.out
     
     def add(self, key, value):
-        if key not in VALID_CONFIG_KEYS:
+        if key not in VALID_RESOURCE_CONFIG_KEYS:
             raise DataError(f"attemped to add invalid config key: {key}")
         
         self.out[key] = value
@@ -61,7 +61,7 @@ class Applicator:
 
         for o in self.opts:
 
-            if o in REQUIRED_CONFIG_FLAGS:
+            if o in REQUIRED_RESOURCE_CONFIG_KEYS:
                 continue
 
             self.lg.debug(f"handling {o}...")
