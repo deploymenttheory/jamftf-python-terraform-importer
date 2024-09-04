@@ -110,7 +110,7 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
     print(config_json)
     print(resource_block)
     print(resource_block.values())
-    for k, v in resource_block.values():
+    for k, v in resource_block.items():
 
         if k not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {k}")
