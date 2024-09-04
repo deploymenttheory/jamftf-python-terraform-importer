@@ -106,10 +106,10 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
         raise KeyError("resources block not present in config file")
 
 
-    for _, v in config_json[RESOURCE_BLOCK_CONFIG_KEY].values():
+    for k, v in config_json[RESOURCE_BLOCK_CONFIG_KEY].values():
 
-        if rk not in ALL_RESOURCE_TYPES:
-            raise InvalidResourceTypeError(f"invalid resource type: {rk}")
+        if k not in ALL_RESOURCE_TYPES:
+            raise InvalidResourceTypeError(f"invalid resource type: {k}")
 
         for i in v:
             if i not in VALID_RESOURCE_CONFIG_KEYS:
