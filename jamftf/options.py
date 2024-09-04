@@ -75,10 +75,10 @@ class Applicator:
                 self.lg.info(f"{o} set for {self.resource_type}")
 
         if self.exclude_ids:
-            data = self._exclude_ids(self, data)
+            data = self._exclude_ids(data)
 
         if self.validate:
-            self._validation(self, data)
+            self._validation(data)
 
         return data
 
