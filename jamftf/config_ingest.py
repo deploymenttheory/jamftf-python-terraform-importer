@@ -94,7 +94,7 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
     out = []
     exclude_block = {}
 
-    if EXCLUDE_BLOCK_CONFIG_KEY in config_json:
+    if EXCLUDE_BLOCK_CONFIG_KEY in config_json.keys():
         exclude_block = config_json[EXCLUDE_BLOCK_CONFIG_KEY]
 
         for rk in exclude_block:
@@ -105,8 +105,10 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
     if RESOURCE_BLOCK_CONFIG_KEY not in config_json:
         raise KeyError("resources block not present in config file")
 
-    print(config_json[RESOURCE_BLOCK_CONFIG_KEY].values())
-    for k, v in config_json[RESOURCE_BLOCK_CONFIG_KEY].values():
+    resource_block: dict
+    resource_block = config_json[RESOURCE_BLOCK_CONFIG_KEY]
+    print(resource_block.values())
+    for k, v in resource_block.values():
 
         if k not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {k}")
