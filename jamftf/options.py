@@ -42,7 +42,7 @@ class Applicator:
             opts: dict,
             validate: bool,
             logger: Logger,
-            exclude_ids: list[int] = list
+            exclude_ids: list[int] = []
         ):
 
         self.opts = opts
