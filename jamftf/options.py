@@ -131,10 +131,10 @@ class Applicator:
         """sweeps resource names for chars invalid in HCL"""
         self.lg.debug(f"checking for illegal chars: {ILLEGAL_NAME_CHARS}")
 
-        for i in data:
+        for i, j in data.items():
             for c in data[i]["name"]:
                 if c in ILLEGAL_NAME_CHARS:
-                    raise DataError(f"{self.resource_type.upper()}: Illegal char: '{c}' found in res: {i}, name: {data[i]['name']}")
+                    raise DataError(f"Illegal char: '{c}' found in {self.resource_type}, id: {j["id"]}, name: {j['name']}")
 
 
     def _check_duplicates(self, data: dict):
