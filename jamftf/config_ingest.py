@@ -94,23 +94,21 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
     out = []
     exclude_block = {}
 
-    if EXCLUDE_BLOCK_CONFIG_KEY in config_json.keys():
+    if EXCLUDE_BLOCK_CONFIG_KEY in config_json:
         exclude_block = config_json[EXCLUDE_BLOCK_CONFIG_KEY]
 
         for rk in exclude_block:
             if rk not in ALL_RESOURCE_TYPES:
                 raise DataError("invalid resource key in exclude block")
 
-
     if RESOURCE_BLOCK_CONFIG_KEY not in config_json:
         raise KeyError("resources block not present in config file")
 
-    resource_block: dict
-    resource_block = config_json[RESOURCE_BLOCK_CONFIG_KEY]
-    print(config_json)
-    print(resource_block)
-    print(resource_block.values())
-    for k, v in resource_block.items():
+
+    res_block: dict = config_json[RESOURCE_BLOCK_CONFIG_KEY]
+    k: str
+    v: dict
+    for k, v in res_block.items():
 
         if k not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {k}")
@@ -123,17 +121,22 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
             if i not in v:
                 raise DataError(f"missing required config key: {i}")
             
-        assert isinstance(v["validate"], bool), "validate key is not a bool"
-        assert isinstance(v["active"], bool), "active key is not a bool"
+        validate = v["validate"]
+        if not isinstance(validate, bool):
+            raise AssertionError(f"validate key is of the wrong type: {validate}, {type(validate)}")
+        
+        active = v["active"]
+        if not isinstance(active, bool):
+            raise AssertionError(f"active key is of the wrong type: {active}, {type(active)}")
 
-        if not v["active"]:
+        if not active:
             continue
 
         out.append(
-            RESOURCE_TYPE_OBJECT_MAP[rk](
+            RESOURCE_TYPE_OBJECT_MAP[k](
                 options=Options().from_json(v), 
-                validate=v["validate"], 
-                exclude=exclude_block[rk] if rk in exclude_block else []
+                validate=validate, 
+                exclude=exclude_block[k] if k in exclude_block else []
             )
         )
 
