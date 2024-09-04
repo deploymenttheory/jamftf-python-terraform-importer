@@ -74,7 +74,7 @@ class Applicator:
 
                 self.lg.info(f"{o} set for {self.resource_type}")
 
-
+        print(self.exclude_ids)
         if self.exclude_ids:
             data = self._exclude_ids(data)
 
