@@ -2,6 +2,7 @@
 
 import jamfpy
 from requests import HTTPError
+from logging import Logger
 from .options import Options, Applicator
 from .exceptions import (
     InvalidResourceTypeError,
@@ -14,6 +15,7 @@ from .constants import RESOURCE_TYPES
 class Resource:
     """parent obj for resources"""
     resource_type = ""
+    lg: Logger
 
     def __init__(
             self,

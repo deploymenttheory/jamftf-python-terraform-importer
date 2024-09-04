@@ -70,7 +70,7 @@ class Applicator:
             if self.opts[o]:
                 self.lg.debug(f"{o} flagged to be set")
 
-                data = options_master[o](self, data)
+                data = options_master[o](data)
 
                 self.lg.info(f"{o} set for {self.resource_type}")
 
