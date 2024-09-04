@@ -1,6 +1,7 @@
-"""manages configuration injest"""
+"""Configuration file ingest functions"""
 
 from typing import List
+import json
 from .constants import (
     EXCLUDE_BLOCK_CONFIG_KEY,
     ALL_RESOURCE_TYPES,
@@ -17,7 +18,7 @@ from .resources import (
 )
 from .options import Options
 
-import json
+
 
 
 RESOURCE_TYPE_OBJECT_MAP = {
@@ -54,15 +55,15 @@ def parse_config_file(path: str) -> list[Resource]:
     required keys as specified in REQUIRED_RESOURCE_CONFIG_KEYS.
     """
 
-    # Validate the path here
+    # // TODO sanitise  the path
     sanitized_path = path
 
-    jsonData = {}
-    with open(sanitized_path, "w") as f:
-        jsonData = json.load(f)
+    json_data = {}
+    with open(sanitized_path, "w", encoding="UTF-8") as f:
+        json_data = json.load(f)
 
 
-    return parse_config_dict(jsonData)
+    return parse_config_dict(json_data)
 
 
 def parse_config_dict(config_json: dict) -> List[Resource]:
@@ -120,11 +121,11 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
         for i in REQUIRED_RESOURCE_CONFIG_KEYS:
             if i not in v:
                 raise DataError(f"missing required config key: {i}")
-            
+
         validate = v["validate"]
         if not isinstance(validate, bool):
             raise AssertionError(f"validate key is of the wrong type: {validate}, {type(validate)}")
-        
+
         active = v["active"]
         if not isinstance(active, bool):
             raise AssertionError(f"active key is of the wrong type: {active}, {type(active)}")
@@ -134,8 +135,8 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
 
         out.append(
             RESOURCE_TYPE_OBJECT_MAP[k](
-                options=Options().from_json(v), 
-                validate=validate, 
+                options=Options().from_json(v),
+                validate=validate,
                 exclude=exclude_block[k] if k in exclude_block else []
             )
         )

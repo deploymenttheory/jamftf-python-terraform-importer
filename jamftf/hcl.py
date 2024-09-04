@@ -4,7 +4,23 @@ handles all hcl related operations
 
 def import_block(resource_type, name, jpro_id):
     """
-    Constructs a valid import block using the resource type, name and server id.
+    Generate a formatted import block for a resource.
+
+    Args:
+        resource_type (str): The type of the resource being imported.
+        name (str): The name of the resource.
+        jpro_id (int or str): The server ID of the resource.
+
+    Returns:
+        str: A formatted string representing the import block.
+
+    Example:
+        >>> import_block("aws_instance", "web_server", 12345)
+        "import {
+        id = 12345
+        to = aws_instance.web_server
+        }
+        "
     """
 
     return "import {\nid = " + str(jpro_id) + "\nto = " + f"{resource_type}.{name}" + "\n}\n"
@@ -12,20 +28,7 @@ def import_block(resource_type, name, jpro_id):
 
 def generate_imports(resource_type: str, resources: dict) -> list:
     """
-    Generates multiple 
-    data should follow this structure:
-    data: {
-        "resource_type": TYPE AS IN PROVIDER
-        "resources": {
-            "name.id": {
-                "id": X
-                "name": Y
-            },
-            "name2.id": {
-                "id": X
-                "name": Y
-            }
-        }
+    todo
     """
     out_list = []
 

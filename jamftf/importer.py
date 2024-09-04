@@ -3,7 +3,6 @@ from typing import List
 import jamfpy
 from .exceptions import ImporterConfigError
 from .resources import Resource
-from logging import Logger
 
 class Importer:
     """
@@ -30,9 +29,9 @@ class Importer:
 
     targetted: list[Resource] = None
     def __init__(
-            self, 
-            client: jamfpy.JamfTenant, 
-            targetted: List[Resource], 
+            self,
+            client: jamfpy.JamfTenant,
+            targetted: List[Resource],
             debug: bool = False
         ):
 
@@ -47,8 +46,6 @@ class Importer:
             t.refresh_data()
 
         self.targetted = targetted
-        
-
 
 
     def Refresh(self):
@@ -57,15 +54,16 @@ class Importer:
             t.refresh_data()
 
     def HCLs(self):
+        """generates hcl as a string"""
         out = ""
         hcld = self.HCLd()
-        for i in hcld:
-            out += hcld[i] + "\n"
+        for i in hcld.items():
+            out += i + "\n"
 
         return out
 
     def HCLd(self):
-        """generates hcl on every targetted object"""
+        """generates hcl as a dict"""
         out = {}
         for r in self.targetted:
             if r.resource_type not in out:

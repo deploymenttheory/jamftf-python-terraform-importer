@@ -1,13 +1,13 @@
 """Custom Exceptions"""
 
 class ImporterConfigError(Exception):
-    """error type for incorrect configurations"""
+    """Raised when importer configuration is invalid or incompatible."""
 
 class DataError(Exception):
-    """error type for invalid data combinations/tainted data"""
+    """Raised when data is corrupt, inconsistent, or fails validation checks."""
 
 class InvalidResourceTypeError(Exception):
-    """raised if invalid resource type key reference."""
+    """Raised when an unsupported or non-existent resource type is referenced."""
 
 class OptionsConflictError(Exception):
-    """raised if conflict found between global and local options"""
+    """Raised when global and local options have contradictory settings."""

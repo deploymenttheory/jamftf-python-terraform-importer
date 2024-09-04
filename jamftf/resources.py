@@ -13,12 +13,12 @@ class Resource:
     resource_type = ""
 
     def __init__(
-            self, 
-            options: Options = None, 
-            validate: bool = True, 
-            client: jamfpy.JamfTenant = None, 
+            self,
+            options: Options = None,
+            validate: bool = True,
+            client: jamfpy.JamfTenant = None,
             debug: bool = False,
-            exclude: list[int] = []
+            exclude: list[int] = list
         ):
 
         self._validate_resource_type()
@@ -33,9 +33,9 @@ class Resource:
         self.options = options if options is not None else Options()
         self._init_applicator(log_level, validate)
 
-       
 
-        self.lg.info(f"resource initilized: {self.resource_type}")
+
+        self.lg.info("resource initilized: %s", self.resource_type)
 
 
     # Magic
@@ -50,9 +50,9 @@ class Resource:
         """init_applicator initilizes an applicator and adds a logger"""
         logger = jamfpy.get_logger(f"applicator({self.resource_type})", level=log_level)
         self.applicator = Applicator(
-            self.resource_type, 
-            opts=self.options.options(), 
-            validate=validate, 
+            self.resource_type,
+            opts=self.options.options(),
+            validate=validate,
             logger=logger,
             exclude_ids=self.exclude
         )
@@ -84,15 +84,15 @@ class Resource:
 
     def apply_options(self):
         """sends data through applicator object to have options applied""" 
-        self.lg.debug("applying options...")       
+        self.lg.debug("applying options...")
         self.data = self.applicator.apply(self.data)
 
 
     def _log_get(self):
         """standardises log for getting data"""
-        self.lg.info(f"getting data for resource type: {self.resource_type}")
+        self.lg.info("getting data for resource type: %s", self.resource_type)
 
-    
+
     def _get(self):
         """
         Retrieves data from api and should always populate self.data with:
@@ -109,16 +109,16 @@ class Resource:
 
 
     # Public
-    
+
     def set_debug(self, debug: bool):
         """overrides log level to debug for all handlers"""
         level = self._init_log_level(debug)
-        
+
         self.lg.setLevel(level)
         for i in self.lg.handlers:
             i.setLevel(level)
 
-        self.lg.info(f"log level has been overridden to: {self.lg.level}")
+        self.lg.info("log level has been overridden to: %s", self.lg.level)
 
 
     def set_client(self, client: jamfpy.JamfTenant, refresh_data: bool = False):
@@ -145,7 +145,7 @@ class Resource:
 
         self.options = options
         self.lg.debug("options set successfully")
-        
+
         if apply:
             self.apply_options()
 
@@ -171,8 +171,6 @@ class Scripts(Resource):
     resource_type = RESOURCE_TYPES["script"]
 
     def _get(self):
-        self._log_get()
-        
         """
         Retrieves data from api and should always populate self.data with:
         {
@@ -182,7 +180,7 @@ class Scripts(Resource):
             }
         }
         """
-
+        self._log_get()
         resp, data = self.client.pro.scripts.get_all()
         if not resp.ok:
             raise HTTPError("bad api call")
@@ -224,7 +222,7 @@ class Policies(Resource):
 
         if not resp.ok:
             raise HTTPError("bad api call")
-        
+
         for i in resp.json()["policies"]:
             self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
@@ -243,10 +241,9 @@ class ConfigurationProfile(Resource):
 
         if not resp.ok:
             raise HTTPError("bad api call")
-        
+
         for i in resp.json()["os_x_configuration_profiles"]:
             self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
                 "name": i["name"]
-            }     
-
+            }

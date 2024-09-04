@@ -1,9 +1,8 @@
 """home of options"""
+from logging import Logger
 from .constants import ILLEGAL_NAME_CHARS, REQUIRED_RESOURCE_CONFIG_KEYS, VALID_RESOURCE_CONFIG_KEYS
 from .exceptions import DataError
-from logging import Logger
-from jamfpy import get_logger
-from random import randint
+
 
 class Options:
     """Options is a small framework for generating options schemas"""
@@ -11,37 +10,39 @@ class Options:
             self,
             use_resource_type_as_name = False,
         ):
-        
+
         self.out = {}
         self.out["use_resource_type_as_name"] = use_resource_type_as_name
 
-    
+
     def options(self):
+        """returns options from self"""
         return self.out
-    
+
     def add(self, key, value):
+        """allows method bound addition of options"""
         if key not in VALID_RESOURCE_CONFIG_KEYS:
             raise DataError(f"attemped to add invalid config key: {key}")
-        
+
         self.out[key] = value
 
     def from_json(self, data: dict):
+        """generates options from dict"""
         self.out = data
         return self
 
-        
 
 class Applicator:
     """
     Applicator holds interfaced methods for applying options form json schema
     """
     def __init__(
-            self, 
-            resource_type: str, 
-            opts: dict, 
+            self,
+            resource_type: str,
+            opts: dict,
             validate: bool,
             logger: Logger,
-            exclude_ids: list[int] = []
+            exclude_ids: list[int] = list
         ):
 
         self.opts = opts
@@ -51,11 +52,11 @@ class Applicator:
         self.exclude_ids = exclude_ids
 
 
-
     def apply(self, data: dict):
+        """applies options to supplied data"""
         self.lg.info("applying options...")
 
-        OPTIONS_MASTER = {
+        options_master = {
             "use_resource_type_as_name": self._use_resource_type_as_name
         }
 
@@ -69,7 +70,7 @@ class Applicator:
             if self.opts[o]:
                 self.lg.debug(f"{o} flagged to be set")
 
-                data = OPTIONS_MASTER[o](data)
+                data = options_master[o](data)
 
                 self.lg.info(f"{o} set for {self.resource_type}")
 
@@ -81,7 +82,7 @@ class Applicator:
             self._validation(data)
 
         return data
-    
+
 
     def _validation(self, data):
         """_validation is a parent func for running data validation functions"""
@@ -94,7 +95,7 @@ class Applicator:
 
     def _exclude_ids(self, data: dict) -> dict:
         """removes any IDs from the data which have been specifid to be excluded"""
-        
+
         to_delete = []
         for i in data:
 
@@ -124,7 +125,7 @@ class Applicator:
             counter += 1
 
         return data
-        
+
 
     def _check_illegal_chars(self, data: dict):
         """sweeps resource names for chars invalid in HCL"""
@@ -133,7 +134,7 @@ class Applicator:
         for i in data:
             for c in data[i]["name"]:
                 if c in ILLEGAL_NAME_CHARS:
-                    raise DataError(f"Illegal char: '{c}' found in res: {i}, name: {data[i]["name"]}")
+                    raise DataError(f"Illegal char: '{c}' found in res: {i}, name: {data[i]['name']}")
 
 
     def _check_duplicates(self, data: dict):
@@ -150,15 +151,12 @@ class Applicator:
                 keys[name] += 1
             else:
                 raise DataError("you shouldn't be here")
-            
+
         duplicates = []
-        for i in keys:
-            if keys[i] > 1:
+        for i, j in keys.items():
+            if j > 1:
                 duplicates.append(i)
 
         if duplicates:
-            raise DataError(f"Duplcate named resources found: {'\n'.join(duplicates)}")
-
-
-
-
+            nl = "\n"
+            raise DataError(f"Duplcate named resources found: {nl.join(duplicates)}")
