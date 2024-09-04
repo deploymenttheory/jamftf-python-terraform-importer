@@ -59,7 +59,7 @@ def parse_config_file(path: str) -> list[Resource]:
     sanitized_path = path
 
     json_data = {}
-    with open(sanitized_path, "w", encoding="UTF-8") as f:
+    with open(sanitized_path, "r", encoding="UTF-8") as f:
         json_data = json.load(f)
 
 
