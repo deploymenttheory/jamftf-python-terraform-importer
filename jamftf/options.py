@@ -134,7 +134,7 @@ class Applicator:
         for i, j in data.items():
             for c in data[i]["name"]:
                 if c in ILLEGAL_NAME_CHARS:
-                    raise DataError(f"Illegal char: '{c}' found in {self.resource_type}, id: {j["id"]}, name: {j['name']}")
+                    raise DataError(f"Illegal char: '{c}' (ASCII: {ord(c)}) found in {self.resource_type}, id: {j["id"]}, name: {j['name']}")
 
 
     def _check_duplicates(self, data: dict):
