@@ -1,11 +1,14 @@
-"""parent obj for resources"""
+"""Resource parent object"""
 
 import jamfpy
 from requests import HTTPError
-from .hcl import generate_imports
-from .exceptions import InvalidResourceTypeError, ImporterConfigError
-from .constants import RESOURCE_TYPES
 from .options import Options, Applicator
+from .exceptions import (
+    InvalidResourceTypeError,
+    ImporterConfigError
+)
+from .hcl import generate_imports
+from .constants import RESOURCE_TYPES
 
 
 class Resource:
@@ -166,6 +169,7 @@ class Resource:
         return generate_imports(self.resource_type, self.data)
 
 
+
 class Scripts(Resource):
     """Script obj"""
     resource_type = RESOURCE_TYPES["script"]
@@ -181,6 +185,7 @@ class Scripts(Resource):
         }
         """
         self._log_get()
+
         resp, data = self.client.pro.scripts.get_all()
         if not resp.ok:
             raise HTTPError("bad api call")
@@ -230,7 +235,7 @@ class Policies(Resource):
             }
 
 
-class ConfigurationProfile(Resource):
+class ConfigurationProfiles(Resource):
     """osx config profile"""
     resource_type = RESOURCE_TYPES["osx_config_profile"]
 
