@@ -1,8 +1,8 @@
 """Resource parent object"""
 
+from logging import Logger
 import jamfpy
 from requests import HTTPError
-from logging import Logger
 from .options import Options, Applicator
 from .exceptions import (
     InvalidResourceTypeError,

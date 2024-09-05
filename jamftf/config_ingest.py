@@ -19,8 +19,6 @@ from .resources import (
 from .options import Options
 
 
-
-
 RESOURCE_TYPE_OBJECT_MAP = {
     "jamfpro_script": Scripts,
     "jamfpro_category": Categories,
@@ -55,7 +53,7 @@ def parse_config_file(path: str) -> list[Resource]:
     required keys as specified in REQUIRED_RESOURCE_CONFIG_KEYS.
     """
 
-    # // TODO sanitise  the path
+    # // TODO sanitise the path
     sanitized_path = path
 
     json_data = {}
