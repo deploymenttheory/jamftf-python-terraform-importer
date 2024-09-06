@@ -51,6 +51,8 @@ class Applicator:
         self.lg = logger
         self.exclude_ids = exclude_ids
 
+        logger.debug("HERE HERE")
+
 
     def apply(self, data: dict):
         """applies options to supplied data"""
@@ -95,7 +97,6 @@ class Applicator:
     def _exclude_ids(self, data: dict) -> dict:
         """removes any IDs from the data which have been specifid to be excluded"""
         self.lg.debug("excluding ids... %s", self.exclude_ids)
-        print(self.lg.debug("HERE"))
 
         to_delete = []
         for i in data:
