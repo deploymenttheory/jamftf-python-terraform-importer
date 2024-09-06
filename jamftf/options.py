@@ -53,8 +53,6 @@ class Applicator:
         self.lg = logger
         self.exclude_ids = exclude_ids
 
-        self.lg.info("HERE HERE")
-
 
     def apply(self, data: dict):
         """applies options to supplied data"""
@@ -69,14 +67,14 @@ class Applicator:
             if o in REQUIRED_RESOURCE_CONFIG_KEYS:
                 continue
 
-            self.lg.info(f"handling {o}...")
+            self.lg.debug(f"handling {o}...")
 
             if self.opts[o]:
-                self.lg.info(f"{o} flagged to be set")
+                self.lg.debug(f"{o} flagged to be set")
 
                 data = options_master[o](data)
 
-                self.lg.info(f"{o} set for {self.resource_type}")
+                self.lg.debug(f"{o} set for {self.resource_type}")
 
         if self.exclude_ids:
             data = self._exclude_ids(data)
@@ -103,18 +101,18 @@ class Applicator:
         to_delete = []
         for i in data:
 
-            self.lg.info("checking %s", i)
+            self.lg.debug("checking %s", i)
 
             res_id = int(data[i]["id"])
 
             if res_id in self.exclude_ids:
 
-                self.lg.info(f"{res_id} marked for deletion")
+                self.lg.debug(f"{res_id} marked for deletion")
 
                 to_delete.append(i)
 
 
-        self.lg.info("deleting excluded records")
+        self.lg.debug("deleting excluded records")
         for i in to_delete:
             del data[i]
 

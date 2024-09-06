@@ -123,6 +123,10 @@ class Resource:
         for i in self.lg.handlers:
             i.setLevel(level)
 
+        self.applicator.lg.setLevel(level)
+        for i in self.applicator.lg.handlers:
+            i.setLevel(level)
+
         self.lg.info("log level has been overridden to: %s", self.lg.level)
 
 
