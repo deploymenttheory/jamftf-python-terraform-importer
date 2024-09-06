@@ -19,12 +19,14 @@ class Options:
         """returns options from self"""
         return self.out
 
+
     def add(self, key, value):
         """allows method bound addition of options"""
         if key not in VALID_RESOURCE_CONFIG_KEYS:
             raise DataError(f"attemped to add invalid config key: {key}")
 
         self.out[key] = value
+
 
     def from_json(self, data: dict):
         """generates options from dict"""
@@ -51,7 +53,7 @@ class Applicator:
         self.lg = logger
         self.exclude_ids = exclude_ids
 
-        self.lg.debug("HERE HERE")
+        self.lg.info("HERE HERE")
 
 
     def apply(self, data: dict):
@@ -67,10 +69,10 @@ class Applicator:
             if o in REQUIRED_RESOURCE_CONFIG_KEYS:
                 continue
 
-            self.lg.debug(f"handling {o}...")
+            self.lg.info(f"handling {o}...")
 
             if self.opts[o]:
-                self.lg.debug(f"{o} flagged to be set")
+                self.lg.info(f"{o} flagged to be set")
 
                 data = options_master[o](data)
 
@@ -88,7 +90,7 @@ class Applicator:
     def _validation(self, data):
         """_validation is a parent func for running data validation functions"""
 
-        self.lg.debug("validating data...")
+        self.lg.info("validating data...")
 
         self._check_illegal_chars(data)
         self._check_duplicates(data)
@@ -96,23 +98,23 @@ class Applicator:
 
     def _exclude_ids(self, data: dict) -> dict:
         """removes any IDs from the data which have been specifid to be excluded"""
-        self.lg.debug("excluding ids... %s", self.exclude_ids)
+        self.lg.info("excluding ids... %s", self.exclude_ids)
 
         to_delete = []
         for i in data:
 
-            self.lg.debug("checking %s", i)
+            self.lg.info("checking %s", i)
 
             res_id = int(data[i]["id"])
 
             if res_id in self.exclude_ids:
 
-                self.lg.debug(f"{res_id} marked for deletion")
+                self.lg.info(f"{res_id} marked for deletion")
 
                 to_delete.append(i)
 
 
-        self.lg.debug("deleting excluded records")
+        self.lg.info("deleting excluded records")
         for i in to_delete:
             del data[i]
 
@@ -121,7 +123,7 @@ class Applicator:
 
     def _use_resource_type_as_name(self, data: dict) -> dict:
         """change the names of all resources held in data to resource_name.XX"""
-        self.lg.debug("amending resource names...")
+        self.lg.info("amending resource names...")
 
         counter = 0
         for i in data:
@@ -133,7 +135,7 @@ class Applicator:
 
     def _check_illegal_chars(self, data: dict):
         """sweeps resource names for chars invalid in HCL"""
-        self.lg.debug(f"checking for illegal chars: {ILLEGAL_NAME_CHARS}")
+        self.lg.info(f"checking for illegal chars: {ILLEGAL_NAME_CHARS}")
 
         for i in data.values():
             for c in i["name"]:
@@ -143,7 +145,7 @@ class Applicator:
 
     def _check_duplicates(self, data: dict):
         """iterates through all resource names ensuring no duplicates"""
-        self.lg.debug("checking for duplicates")
+        self.lg.info("checking for duplicates")
 
 
         keys = {}
