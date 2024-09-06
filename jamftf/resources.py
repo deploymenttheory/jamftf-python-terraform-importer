@@ -116,7 +116,7 @@ class Resource:
     # Public
 
     def set_debug(self, debug: bool):
-        """overrides log level to debug for all handlers"""
+        """overrides log level to debug for all handlers, including the applicator"""
         level = self._init_log_level(debug)
 
         self.lg.setLevel(level)
