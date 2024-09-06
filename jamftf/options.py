@@ -51,7 +51,7 @@ class Applicator:
         self.lg = logger
         self.exclude_ids = exclude_ids
 
-        logger.debug("HERE HERE")
+        self.lg.debug("HERE HERE")
 
 
     def apply(self, data: dict):
