@@ -96,6 +96,7 @@ class Applicator:
         """removes any IDs from the data which have been specifid to be excluded"""
         self.lg.debug("excluding ids... %s", self.exclude_ids)
         print("HERE")
+        print(self.lg)
 
         to_delete = []
         for i in data:
