@@ -23,7 +23,7 @@ class Resource:
             validate: bool = True,
             client: jamfpy.JamfTenant = None,
             debug: bool = False,
-            exclude: list[int] = list
+            exclude: list[int] = None
         ):
 
         self._validate_resource_type()
@@ -116,11 +116,15 @@ class Resource:
     # Public
 
     def set_debug(self, debug: bool):
-        """overrides log level to debug for all handlers"""
+        """overrides log level to debug for all handlers, including the applicator"""
         level = self._init_log_level(debug)
 
         self.lg.setLevel(level)
         for i in self.lg.handlers:
+            i.setLevel(level)
+
+        self.applicator.lg.setLevel(level)
+        for i in self.applicator.lg.handlers:
             i.setLevel(level)
 
         self.lg.info("log level has been overridden to: %s", self.lg.level)

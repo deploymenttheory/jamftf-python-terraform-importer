@@ -57,7 +57,7 @@ class Importer:
         """generates hcl as a string"""
         out = ""
         hcld = self.HCLd()
-        for i in hcld.items():
+        for i in hcld.values():
             out += i + "\n"
 
         return out
