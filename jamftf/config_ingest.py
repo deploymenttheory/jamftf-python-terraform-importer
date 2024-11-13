@@ -28,29 +28,6 @@ RESOURCE_TYPE_OBJECT_MAP = {
 
 def parse_config_file(path: str) -> list[Resource]:
     """
-    Parse a configuration file and return a list of Resource objects.
-
-    This function processes a filepath, extracting resource
-    definitions and any exclusion rules. It performs validation on the configuration
-    structure and creates Resource objects based on the provided specifications.
-
-    Args:
-        path (string): A dictionary containing the configuration data.
-
-    Returns:
-        List[Resource]: A list of instantiated Resource objects.
-
-    Raises:
-        KeyError: If the required resources block is missing from the config.
-        DataError: If there are invalid keys or missing required keys in the config.
-        InvalidResourceTypeError: If an invalid resource type is specified.
-
-    The function expects the following structure in the config_json:
-    - An optional 'exclude_block' key for specifying resources to exclude.
-    - A required 'resources' key containing resource definitions.
-
-    Each resource definition should include 'active', 'validate', and other
-    required keys as specified in REQUIRED_RESOURCE_CONFIG_KEYS.
     """
 
     # // TODO sanitise the path
@@ -66,29 +43,6 @@ def parse_config_file(path: str) -> list[Resource]:
 
 def parse_config_dict(config_json: dict) -> List[Resource]:
     """
-    Parse a configuration file and return a list of Resource objects.
-
-    This function processes a JSON configuration dictionary, extracting resource
-    definitions and any exclusion rules. It performs validation on the configuration
-    structure and creates Resource objects based on the provided specifications.
-
-    Args:
-        config_json (dict): A dictionary containing the configuration data.
-
-    Returns:
-        List[Resource]: A list of instantiated Resource objects.
-
-    Raises:
-        KeyError: If the required resources block is missing from the config.
-        DataError: If there are invalid keys or missing required keys in the config.
-        InvalidResourceTypeError: If an invalid resource type is specified.
-
-    The function expects the following structure in the config_json:
-    - An optional 'exclude_block' key for specifying resources to exclude.
-    - A required 'resources' key containing resource definitions.
-
-    Each resource definition should include 'active', 'validate', and other
-    required keys as specified in REQUIRED_RESOURCE_CONFIG_KEYS.
     """
     out = []
     exclude_block = {}
@@ -107,30 +61,39 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
     res_block: dict = config_json[RESOURCE_BLOCK_CONFIG_KEY]
     k: str
     v: dict
+
+    # for res key, keys
     for k, v in res_block.items():
 
+        # If invalid resource
         if k not in ALL_RESOURCE_TYPES:
             raise InvalidResourceTypeError(f"invalid resource type: {k}")
 
+        # If it contains an invalid config key
         for i in v:
             if i not in VALID_RESOURCE_CONFIG_KEYS:
                 raise DataError(f"invalid config key: {i}")
 
+        # If missing a required config key
         for i in REQUIRED_RESOURCE_CONFIG_KEYS:
             if i not in v:
                 raise DataError(f"missing required config key: {i}")
 
+        # If the resource should be validated
         validate = v["validate"]
         if not isinstance(validate, bool):
             raise AssertionError(f"validate key is of the wrong type: {validate}, {type(validate)}")
 
+        # If the resource should be prossessed.
         active = v["active"]
         if not isinstance(active, bool):
             raise AssertionError(f"active key is of the wrong type: {active}, {type(active)}")
 
+        # If inactive, skip
         if not active:
             continue
 
+        
         out.append(
             RESOURCE_TYPE_OBJECT_MAP[k](
                 options=Options().from_json(v),
