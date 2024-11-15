@@ -53,8 +53,12 @@ class Importer:
         for t in self.targetted:
             t.refresh_data()
 
+
     def HCLs(self):
-        """generates hcl as a string"""
+        """
+        Generates HCL as a dict
+        Joins it into stringd
+        """
         out = ""
         hcld = self.HCLd()
         for i in hcld.values():
@@ -62,8 +66,12 @@ class Importer:
 
         return out
 
+
     def HCLd(self):
-        """generates hcl as a dict"""
+        """
+        Returns dict as:
+        "resource_type: "import statements"
+        """
         out = {}
         for r in self.targetted:
             if r.resource_type not in out:
