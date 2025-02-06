@@ -65,7 +65,7 @@ class Resource:
 
     def _init_logger(self, log_level: int):
         """_init_logger initilizes a logger"""
-        self.lg = jamfpy.get_logger(f"resource-{self.resource_type}", log_level)
+        self.lg = jamfpy.get_logger(f"resource-{self.resource_type}", log_level=log_level)
 
 
     def _init_log_level(self, debug: bool) -> int:
