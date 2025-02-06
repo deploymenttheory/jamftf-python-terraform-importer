@@ -21,7 +21,7 @@ class Resource:
             self,
             options: Options = None,
             validate: bool = True,
-            client: jamfpy.JamfTenant = None,
+            client: jamfpy.Tenant = None,
             debug: bool = False,
             exclude: list[int] = None
         ):
@@ -130,11 +130,11 @@ class Resource:
         self.lg.info("log level has been overridden to: %s", self.lg.level)
 
 
-    def set_client(self, client: jamfpy.JamfTenant, refresh_data: bool = False):
+    def set_client(self, client: jamfpy.Tenant, refresh_data: bool = False):
         """function to wrap setting of object bound client"""
         self.lg.debug("setting client...")
 
-        assert isinstance(client, jamfpy.JamfTenant), "invalid client type"
+        assert isinstance(client, jamfpy.Tenant), "invalid client type"
         self.lg.debug("client type is correct")
 
         self.client = client
