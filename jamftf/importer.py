@@ -15,11 +15,11 @@ class Importer:
         targetted (List[Resource]): A list of Resource objects to be managed.
 
     Args:
-        client (jamfpy.JamfTenant): The Jamf tenant client used for API interactions.
+        client (jamfpy.Tenant): The Jamf tenant client used for API interactions.
         targetted (List[Resource]): A list of Resource objects to be managed.
 
     Raises:
-        AssertionError: If the provided client is not an instance of jamfpy.JamfTenant.
+        AssertionError: If the provided client is not an instance of jamfpy.Tenant.
         ImporterConfigError: If the targetted list is empty.
 
     Methods:
@@ -30,12 +30,12 @@ class Importer:
     targetted: list[Resource] = None
     def __init__(
             self,
-            client: jamfpy.JamfTenant,
+            client: jamfpy.Tenant,
             targetted: List[Resource],
             debug: bool = False
         ):
 
-        assert isinstance(client, jamfpy.JamfTenant), "incorrect client type"
+        assert isinstance(client, jamfpy.Tenant), "incorrect client type"
 
         if len(targetted) == 0:
             raise ImporterConfigError("no targets set")
