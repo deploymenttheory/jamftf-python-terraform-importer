@@ -275,3 +275,21 @@ class ComputerGroupsStatic(Resource):
                     "id": i["id"],
                     "name": i["name"]
                 }
+
+
+class ComputerGroupsSmart(Resource):
+    resource_type = RESOURCE_TYPES["computer_group_static"]
+
+    def _get(self):
+        self._log_get()
+
+        resp = self.client.classic.computergroups.get_all()
+
+        resp.raise_for_status()
+
+        for i in resp.json()["computer_groups"]:
+            if i["is_smart"]:
+                self.data[f"{i["name"]}.{i["id"]}"] = {
+                    "id": i["id"],
+                    "name": i["name"]
+                }

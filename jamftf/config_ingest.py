@@ -14,7 +14,10 @@ from .resources import (
     Resource,
     Scripts,
     Categories,
-    Policies
+    Policies,
+    ConfigurationProfiles,
+    ComputerGroupsStatic,
+    ComputerGroupsSmart
 )
 from .options import Options
 
@@ -22,19 +25,18 @@ from .options import Options
 RESOURCE_TYPE_OBJECT_MAP = {
     "jamfpro_script": Scripts,
     "jamfpro_category": Categories,
-    "jamfpro_policy": Policies
+    "jamfpro_policy": Policies,
+    "jamfpro_macos_configuration_profile_plist": ConfigurationProfiles,
+    "jamfpro_static_computer_group": ComputerGroupsStatic,
+    "jamfpro_smart_computer_group": ComputerGroupsSmart
+
 }
 
 
 def parse_config_file(path: str) -> list[Resource]:
-    """
-    """
-
-    # // TODO sanitise the path
-    sanitized_path = path
 
     json_data = {}
-    with open(sanitized_path, "r", encoding="UTF-8") as f:
+    with open(path, "r", encoding="UTF-8") as f:
         json_data = json.load(f)
 
 
@@ -42,8 +44,7 @@ def parse_config_file(path: str) -> list[Resource]:
 
 
 def parse_config_dict(config_json: dict) -> List[Resource]:
-    """
-    """
+
     out = []
     exclude_block = {}
 
@@ -93,7 +94,7 @@ def parse_config_dict(config_json: dict) -> List[Resource]:
         if not active:
             continue
 
-        
+
         out.append(
             RESOURCE_TYPE_OBJECT_MAP[k](
                 options=Options().from_json(v),
