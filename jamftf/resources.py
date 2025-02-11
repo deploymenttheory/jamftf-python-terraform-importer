@@ -175,7 +175,6 @@ class Resource:
         return generate_imports(self.resource_type, self.data)
 
 
-
 class Scripts(Resource):
     """Script obj"""
     resource_type = RESOURCE_TYPES["script"]
@@ -258,3 +257,21 @@ class ConfigurationProfiles(Resource):
                 "id": i["id"],
                 "name": i["name"]
             }
+
+
+class ComputerGroupsStatic(Resource):
+    resource_type = RESOURCE_TYPES["computer_group_static"]
+
+    def _get(self):
+        self._log_get()
+
+        resp = self.client.classic.computergroups.get_all()
+
+        resp.raise_for_status()
+
+        for i in resp.json()["computer_groups"]:
+            if not i["is_smart"]:
+                self.data[f"{i["name"]}.{i["id"]}"] = {
+                    "id": i["id"],
+                    "name": i["name"]
+                }
