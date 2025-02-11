@@ -18,7 +18,8 @@ from .resources import (
     ConfigurationProfiles,
     ComputerGroupsStatic,
     ComputerGroupsSmart,
-    AdvancedComputerSearches
+    AdvancedComputerSearches,
+    ComputerExtensionAttributes
 )
 from .options import Options
 
@@ -30,8 +31,8 @@ RESOURCE_TYPE_OBJECT_MAP = {
     "jamfpro_macos_configuration_profile_plist": ConfigurationProfiles,
     "jamfpro_static_computer_group": ComputerGroupsStatic,
     "jamfpro_smart_computer_group": ComputerGroupsSmart,
-    "jamfpro_advanced_computer_search": AdvancedComputerSearches
-
+    "jamfpro_advanced_computer_search": AdvancedComputerSearches,
+    "jamfpro_computer_extension_attribute": ComputerExtensionAttributes
 }
 
 

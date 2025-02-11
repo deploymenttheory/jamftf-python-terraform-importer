@@ -310,3 +310,19 @@ class AdvancedComputerSearches(Resource):
                     "id": i["id"],
                     "name": i["name"]
                 }
+
+class ComputerExtensionAttributes(Resource):
+    resource_type = RESOURCE_TYPES["computer_ext_attr"]
+    
+    def _get(self):
+        self._log_get()
+
+        resp = self.client.classic.computer_extension_attributes.get_all()
+        
+        resp.raise_for_status()
+
+        for i in resp.json()["computer_extension_attributes"]:
+                self.data[f"{i["name"]}.{i["id"]}"] = {
+                    "id": i["id"],
+                    "name": i["name"]
+                }

@@ -12,7 +12,8 @@ RESOURCE_TYPES = {
     "osx_config_profile": "jamfpro_macos_configuration_profile_plist",
     "computer_group_static": "jamfpro_static_computer_group",
     "computer_group_smart": "jamfpro_smart_computer_group",
-    "advanced_computer_search": "jamfpro_advanced_computer_search"
+    "advanced_computer_search": "jamfpro_advanced_computer_search",
+    "computer_ext_attr": "jamfpro_computer_extension_attribute"
 }
 
 # Values from above
