@@ -247,7 +247,7 @@ class ConfigurationProfiles(Resource):
     def _get(self):
         self._log_get()
 
-        resp = self.client.classic.configuration_profiles.get_all("json")
+        resp = self.client.classic.configuration_profiles.get_all()
 
         if not resp.ok:
             raise HTTPError("bad api call")
