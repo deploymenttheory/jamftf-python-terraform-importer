@@ -11,7 +11,8 @@ RESOURCE_TYPES = {
     "policy": "jamfpro_policy",
     "osx_config_profile": "jamfpro_macos_configuration_profile_plist",
     "computer_group_static": "jamfpro_static_computer_group",
-    "computer_group_smart": "jamfpro_smart_computer_group"
+    "computer_group_smart": "jamfpro_smart_computer_group",
+    "advanced_computer_search": "jamfpro_advanced_computer_search"
 }
 
 # Values from above

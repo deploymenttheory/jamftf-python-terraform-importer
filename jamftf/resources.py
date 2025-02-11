@@ -293,3 +293,21 @@ class ComputerGroupsSmart(Resource):
                     "id": i["id"],
                     "name": i["name"]
                 }
+
+
+class AdvancedComputerSearches(Resource):
+    resource_type = RESOURCE_TYPES["advanced_computer_searches"]
+
+    def _get(self):
+        self._log_get()
+
+        resp = self.client.classic.computer_searches.get_all()
+
+        resp.raise_for_status()
+
+        for i in resp.json()["advanced_computer_searches"]:
+            if i["is_smart"]:
+                self.data[f"{i["name"]}.{i["id"]}"] = {
+                    "id": i["id"],
+                    "name": i["name"]
+                }

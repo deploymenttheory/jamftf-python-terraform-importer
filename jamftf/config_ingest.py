@@ -17,7 +17,8 @@ from .resources import (
     Policies,
     ConfigurationProfiles,
     ComputerGroupsStatic,
-    ComputerGroupsSmart
+    ComputerGroupsSmart,
+    AdvancedComputerSearches
 )
 from .options import Options
 
@@ -28,7 +29,8 @@ RESOURCE_TYPE_OBJECT_MAP = {
     "jamfpro_policy": Policies,
     "jamfpro_macos_configuration_profile_plist": ConfigurationProfiles,
     "jamfpro_static_computer_group": ComputerGroupsStatic,
-    "jamfpro_smart_computer_group": ComputerGroupsSmart
+    "jamfpro_smart_computer_group": ComputerGroupsSmart,
+    "jamfpro_advanced_computer_search": AdvancedComputerSearches
 
 }
 
