@@ -306,7 +306,6 @@ class AdvancedComputerSearches(Resource):
         resp.raise_for_status()
 
         for i in resp.json()["advanced_computer_searches"]:
-            if i["is_smart"]:
                 self.data[f"{i["name"]}.{i["id"]}"] = {
                     "id": i["id"],
                     "name": i["name"]
