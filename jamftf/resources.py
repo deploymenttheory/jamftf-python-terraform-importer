@@ -296,7 +296,7 @@ class ComputerGroupsSmart(Resource):
 
 
 class AdvancedComputerSearches(Resource):
-    resource_type = RESOURCE_TYPES["advanced_computer_searches"]
+    resource_type = RESOURCE_TYPES["advanced_computer_search"]
 
     def _get(self):
         self._log_get()
