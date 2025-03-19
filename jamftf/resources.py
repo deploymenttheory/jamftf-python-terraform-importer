@@ -278,7 +278,7 @@ class ComputerGroupsStatic(Resource):
 
 
 class ComputerGroupsSmart(Resource):
-    resource_type = RESOURCE_TYPES["computer_group_static"]
+    resource_type = RESOURCE_TYPES["computer_group_smart"]
 
     def _get(self):
         self._log_get()
