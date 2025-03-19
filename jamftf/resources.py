@@ -191,10 +191,10 @@ class Scripts(Resource):
         """
         self._log_get()
 
-        resp, data = self.client.classic.scripts.get_all()
-        if not resp.ok:
-            raise HTTPError("bad api call")
+        resp = self.client.classic.scripts.get_all()
+        resp.raise_for_status()
 
+        data = resp.json()["scripts"]
         for i in data:
             self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
