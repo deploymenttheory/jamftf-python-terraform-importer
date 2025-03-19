@@ -191,7 +191,7 @@ class Scripts(Resource):
         """
         self._log_get()
 
-        resp, data = self.client.pro.scripts.get_all()
+        resp, data = self.client.classic.scripts.get_all()
         if not resp.ok:
             raise HTTPError("bad api call")
 
