@@ -1,7 +1,7 @@
 from logging import Logger
 import jamfpy
 from .options import Options, Applicator
-from exceptions import InvalidResourceTypeError, ImporterConfigError
+from .exceptions import InvalidResourceTypeError, ImporterConfigError
 from .hcl import generate_imports
 
 
