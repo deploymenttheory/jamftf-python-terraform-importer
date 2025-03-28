@@ -2,7 +2,7 @@
 from typing import List
 import jamfpy
 from .exceptions import ImporterConfigError
-from .resources import Resource
+from .models import Resource
 
 class Importer:
     """
@@ -41,7 +41,6 @@ class Importer:
             raise ImporterConfigError("no targets set")
 
         for t in targetted:
-            t.set_debug(debug)
             t.set_client(client)
             t.refresh_data()
 

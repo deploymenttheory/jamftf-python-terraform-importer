@@ -1,8 +1,12 @@
 from logging import Logger
 import jamfpy
+import abc
 from .options import Options, Applicator
 from .exceptions import InvalidResourceTypeError, ImporterConfigError
 from .hcl import generate_imports
+
+LOG_LEVEL_DEBUG = 10
+LOG_LEVEL_INFO = 20
 
 
 class Resource:
@@ -19,19 +23,27 @@ class Resource:
             exclude: list[int] = None
         ):
 
+
+        # TODO this can be turned into an abstract method?
         self._validate_resource_type()
 
-        log_level = self._init_log_level(debug)
+        log_level = LOG_LEVEL_DEBUG if debug else LOG_LEVEL_INFO
+
         self._init_logger(log_level)
 
+        # TODO why do we do this?
         self.data = {}
+
+        # Attrs setting
         self.client = client
         self.exclude = exclude
 
+        # Why do we do this?
         self.options = options if options is not None else Options()
+
+        # Do we need this? Options can probably be set at a later date.
+        # Does it need it's own log level? 
         self._init_applicator(log_level, validate)
-
-
 
         self.lg.info("resource initilized: %s", self.resource_type)
 
@@ -44,16 +56,16 @@ class Resource:
 
     # Private
 
-    def _init_applicator(self, log_level, validate):
-        """init_applicator initilizes an applicator and adds a logger"""
-        logger = jamfpy.get_logger(f"applicator({self.resource_type})", level=log_level)
-        self.applicator = Applicator(
-            self.resource_type,
-            opts=self.options.options(),
-            validate=validate,
-            logger=logger,
-            exclude_ids=self.exclude
-        )
+    # def _init_applicator(self, log_level, validate):
+    #     """init_applicator initilizes an applicator and adds a logger"""
+    #     logger = jamfpy.get_logger(f"applicator({self.resource_type})", level=log_level)
+    #     self.applicator = Applicator(
+    #         self.resource_type,
+    #         opts=self.options.options(),
+    #         validate=validate,
+    #         logger=logger,
+    #         exclude_ids=self.exclude
+    #     )
 
 
     def _init_logger(self, log_level: int):
@@ -61,29 +73,10 @@ class Resource:
         self.lg = jamfpy.get_logger(f"resource-{self.resource_type}", level=log_level)
 
 
-    def _init_log_level(self, debug: bool) -> int:
-        """init logging implements a simple two level logging approach"""
-
-        assert isinstance(debug, bool), "debug flag is not bool"
-
-        log_levels = {
-            "True": 10,
-            "False": 20,
-        }
-
-        return log_levels[str(debug)]
-
-
-    def _validate_resource_type(self):
-        """_validate_resource_type validates that the resource type parameter is set"""
-        if not self.resource_type:
-            raise InvalidResourceTypeError(f"Instantiate a specific resource type and not the parent {self.resource_type}")
-
-
-    def apply_options(self):
-        """sends data through applicator object to have options applied""" 
-        self.lg.debug("applying options...")
-        self.data = self.applicator.apply(self.data)
+    # def apply_options(self):
+    #     """sends data through applicator object to have options applied""" 
+    #     self.lg.debug("applying options...")
+    #     self.data = self.applicator.apply(self.data)
 
 
     def _log_get(self):
@@ -91,6 +84,7 @@ class Resource:
         self.lg.info("getting data for resource type: %s", self.resource_type)
 
 
+    @abc.abstractmethod
     def _get(self):
         """
         Retrieves data from api and should always populate self.data with:
@@ -101,55 +95,28 @@ class Resource:
             }
         }
         """
-
-
-        raise ImporterConfigError("operation invalid at Resource level. Please define a resource type")
+        pass
 
 
     # Public
 
-    def set_debug(self, debug: bool):
-        """overrides log level to debug for all handlers, including the applicator"""
-        level = self._init_log_level(debug)
+    def build_hcl(self):
+        """Generates HCL for all Script attrs"""
+        return generate_imports(self.resource_type, self.data)
 
-        self.lg.setLevel(level)
-        for i in self.lg.handlers:
-            i.setLevel(level)
+    # def set_options(self, options: Options, apply: bool = True):
+    #     """set_options allows options to be set after instantiation"""
+    #     self.lg.debug("setting options...")
 
-        self.applicator.lg.setLevel(level)
-        for i in self.applicator.lg.handlers:
-            i.setLevel(level)
-
-        self.lg.info("log level has been overridden to: %s", self.lg.level)
+    #     assert isinstance(options, Options)
+    #     self.lg.debug("options type is correct")
 
 
-    def set_client(self, client: jamfpy.Tenant, refresh_data: bool = False):
-        """function to wrap setting of object bound client"""
-        self.lg.debug("setting client...")
+    #     self.options = options
+    #     self.lg.debug("options set successfully")
 
-        assert isinstance(client, jamfpy.Tenant), "invalid client type"
-        self.lg.debug("client type is correct")
-
-        self.client = client
-        self.lg.debug("client set successfully")
-
-        if refresh_data:
-            self.refresh_data()
-
-
-    def set_options(self, options: Options, apply: bool = True):
-        """set_options allows options to be set after instantiation"""
-        self.lg.debug("setting options...")
-
-        assert isinstance(options, Options)
-        self.lg.debug("options type is correct")
-
-
-        self.options = options
-        self.lg.debug("options set successfully")
-
-        if apply:
-            self.apply_options()
+    #     if apply:
+    #         self.apply_options()
 
 
     def refresh_data(self):
@@ -160,9 +127,6 @@ class Resource:
             raise ImporterConfigError("no client provided. Provide client via object creation or .set_client(client)")
 
         self._get()
-        self.apply_options()
 
 
-    def build_hcl(self):
-        """Generates HCL for all Script attrs"""
-        return generate_imports(self.resource_type, self.data)
+
