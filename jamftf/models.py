@@ -25,7 +25,7 @@ class Resource:
 
 
         # TODO this can be turned into an abstract method?
-        self._validate_resource_type()
+        # self._validate_resource_type()
 
         log_level = LOG_LEVEL_DEBUG if debug else LOG_LEVEL_INFO
 
@@ -43,7 +43,7 @@ class Resource:
 
         # Do we need this? Options can probably be set at a later date.
         # Does it need it's own log level? 
-        self._init_applicator(log_level, validate)
+        # self._init_applicator(log_level, validate)
 
         self.lg.info("resource initilized: %s", self.resource_type)
 
@@ -127,6 +127,18 @@ class Resource:
             raise ImporterConfigError("no client provided. Provide client via object creation or .set_client(client)")
 
         self._get()
+
+
+    def _use_resource_type_as_name(self, data: dict) -> dict:
+        """change the names of all resources held in data to resource_name.XX"""
+        self.lg.info("amending resource names...")
+
+        counter = 0
+        for i in data:
+            data[i]["name"] = f"{self.resource_type}_{counter}"
+            counter += 1
+
+        return data
 
 
 
