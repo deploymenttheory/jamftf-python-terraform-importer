@@ -133,16 +133,15 @@ class Resource:
         self._get()
 
 
-    def _use_resource_type_as_name(self, data: dict) -> dict:
+    def _use_resource_type_as_name(self) -> dict:
         """change the names of all resources held in data to resource_name.XX"""
         self.lg.info("amending resource names...")
 
         counter = 0
-        for i in data:
-            data[i]["name"] = f"{self.resource_type}_{counter}"
+        for i in self.data:
+            self.data[i]["name"] = f"{self.resource_type}_{counter}"
             counter += 1
 
-        return data
 
 
 
