@@ -43,6 +43,7 @@ class Importer:
         for t in targetted:
             t.set_client(client)
             t.refresh_data()
+            t._use_resource_type_as_name()
 
         self.targetted = targetted
 
