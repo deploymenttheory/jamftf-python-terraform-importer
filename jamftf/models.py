@@ -119,6 +119,10 @@ class Resource:
     #         self.apply_options()
 
 
+    def set_client(self, c: jamfpy.Tenant):
+        self.client = c
+
+
     def refresh_data(self):
         """refreshes data held by object from api"""
         self.lg.info("refreshing data...")
