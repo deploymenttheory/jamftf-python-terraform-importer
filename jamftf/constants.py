@@ -25,14 +25,10 @@ REQUIRED_RESOURCE_CONFIG_KEYS = [
     "validate"
 ]
 
-# All balid config keys
-VALID_RESOURCE_CONFIG_KEYS = [
-    "active", 
-    "validate",
-    "use_resource_type_as_name",
-    "exclude_ids",
-]
 
 # Config keys in one place
-EXCLUDE_BLOCK_CONFIG_KEY = "exclude_ids"
 RESOURCE_BLOCK_CONFIG_KEY = "resources"
+
+
+def valid_resource_key(key):
+    return key in ALL_RESOURCE_TYPES

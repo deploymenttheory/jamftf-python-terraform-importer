@@ -6,7 +6,7 @@ from .models import Resource
 
 class Importer:
     """
-    A class for managing and importing targeted resources from a Jamf tenant.
+    A class for managing and importing targetted resources from a Jamf tenant.
 
     This class handles the initialization, refreshing, and HCL generation for a collection
     of Resource objects associated with a Jamf tenant.
@@ -23,22 +23,23 @@ class Importer:
         ImporterConfigError: If the targetted list is empty.
 
     Methods:
-        Refresh(): Refreshes the data for all targeted resources.
-        HCL(): Generates HCL (HashiCorp Configuration Language) for all targeted resources.
+        Refresh(): Refreshes the data for all targetted resources.
+        HCL(): Generates HCL (HashiCorp Configuration Language) for all targetted resources.
     """
 
-    targetted: list[Resource] = None
+    targetted: list[Resource]
     def __init__(
             self,
             client: jamfpy.Tenant,
             targetted: List[Resource],
-            debug: bool = False
         ):
 
-        assert isinstance(client, jamfpy.Tenant), "incorrect client type"
+        assert isinstance(client, jamfpy.Tenant), f"invalid client type {type(client)}"
 
-        if len(targetted) == 0:
+        if not targetted:
             raise ImporterConfigError("no targets set")
+        
+        assert all(isinstance(t, Resource) for t in targetted), "invalid resource type provided"
 
         for t in targetted:
             t.set_client(client)
@@ -57,12 +58,12 @@ class Importer:
     def HCLs(self):
         """
         Generates HCL as a dict
-        Joins it into stringd
+        Joins it into stringd 
         """
         out = ""
         hcld = self.HCLd()
         for i in hcld.values():
-            out += i + "\n"
+            out += (i + "\n")
 
         return out
 
