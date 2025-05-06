@@ -1,22 +1,16 @@
 """Resource parent object"""
 
 from logging import Logger
-import jamfpy
 from requests import HTTPError
-from .options import Options, Applicator
-from .exceptions import (
-    InvalidResourceTypeError,
-    ImporterConfigError
-)
 from .models import Resource
-from .constants import RESOURCE_TYPES
+from .constants import ProviderResourceTags
 
 
 
 
 class Scripts(Resource):
     """Script obj"""
-    resource_type = RESOURCE_TYPES["script"]
+    resource_type = ProviderResourceTags.script
 
     def _get(self):
         """
@@ -43,7 +37,7 @@ class Scripts(Resource):
 
 class Categories(Resource):
     """categories"""
-    resource_type = RESOURCE_TYPES["category"]
+    resource_type = ProviderResourceTags.category
 
     def _get(self):
         self._log_get()
@@ -62,7 +56,7 @@ class Categories(Resource):
 
 class Policies(Resource):
     """policies"""
-    resource_type = RESOURCE_TYPES["policy"]
+    resource_type = ProviderResourceTags.policy
 
     def _get(self):
         self._log_get()
@@ -81,7 +75,7 @@ class Policies(Resource):
 
 class ConfigurationProfiles(Resource):
     """osx config profile"""
-    resource_type = RESOURCE_TYPES["osx_config_profile"]
+    resource_type = ProviderResourceTags.macos_config_profile
 
     def _get(self):
         self._log_get()
@@ -99,7 +93,7 @@ class ConfigurationProfiles(Resource):
 
 
 class ComputerGroupsStatic(Resource):
-    resource_type = RESOURCE_TYPES["computer_group_static"]
+    resource_type = ProviderResourceTags.computer_group_static
 
     def _get(self):
         self._log_get()
@@ -117,7 +111,7 @@ class ComputerGroupsStatic(Resource):
 
 
 class ComputerGroupsSmart(Resource):
-    resource_type = RESOURCE_TYPES["computer_group_smart"]
+    resource_type = ProviderResourceTags.computer_group_smart
 
     def _get(self):
         self._log_get()
@@ -135,7 +129,7 @@ class ComputerGroupsSmart(Resource):
 
 
 class AdvancedComputerSearches(Resource):
-    resource_type = RESOURCE_TYPES["advanced_computer_search"]
+    resource_type = ProviderResourceTags.advanced_computer_search
 
     def _get(self):
         self._log_get()
@@ -150,8 +144,9 @@ class AdvancedComputerSearches(Resource):
                     "name": i["name"]
                 }
 
+
 class ComputerExtensionAttributes(Resource):
-    resource_type = RESOURCE_TYPES["computer_ext_attr"]
+    resource_type = ProviderResourceTags.computer_ext_attr
     
     def _get(self):
         self._log_get()

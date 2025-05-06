@@ -1,34 +1,47 @@
 """storage for all constant values for easier configuration"""
+from .resources import (
+    Scripts,
+    Categories,
+    Policies,
+    ConfigurationProfiles,
+    ComputerGroupsStatic,
+    ComputerGroupsSmart,
+    AdvancedComputerSearches,
+    ComputerExtensionAttributes
+)
 
-# Invalid characters in resource names
-ILLEGAL_NAME_CHARS = [".", "/", " "]
+from enum import Enum
 
-# terraform resource type strings centralised
-RESOURCE_TYPES = {
-    "script": "jamfpro_script",
-    "category": "jamfpro_category",
-    "department": "jamfpro_department",
-    "policy": "jamfpro_policy",
-    "osx_config_profile": "jamfpro_macos_configuration_profile_plist",
-    "computer_group_static": "jamfpro_static_computer_group",
-    "computer_group_smart": "jamfpro_smart_computer_group",
-    "advanced_computer_search": "jamfpro_advanced_computer_search",
-    "computer_ext_attr": "jamfpro_computer_extension_attribute"
+class ProviderResourceTags(str, Enum):
+    script = "jamfpro_script"
+    category = "jamfpro_category"
+    policy = "jamfpro_policy"
+    macos_config_profile = "jamfpro_macos_configuration_profile_plist"
+    computer_group_static = "jamfpro_static_computer_group"
+    computer_group_smart = "jamfpro_smart_computer_group"
+    advanced_computer_search = "jamfpro_advanced_computer_search"
+    computer_ext_attr = "jamfpro_computer_extension_attribute"
+
+    @classmethod
+    def all(cls):
+        return list(cls)
+
+    @classmethod
+    def valid_resource_check(cls, key: str):
+        return key in cls._value2member_map_
+
+
+RESOURCE_TYPE_OBJECT_MAP = {
+    ProviderResourceTags.script: Scripts,
+    ProviderResourceTags.category: Categories,
+    ProviderResourceTags.policy: Policies,
+    ProviderResourceTags.macos_config_profile: ConfigurationProfiles,
+    ProviderResourceTags.computer_group_static: ComputerGroupsStatic,
+    ProviderResourceTags.computer_group_smart: ComputerGroupsSmart,
+    ProviderResourceTags.advanced_computer_search: AdvancedComputerSearches,
+    ProviderResourceTags.computer_ext_attr: ComputerExtensionAttributes
 }
-
-# Values from above
-ALL_RESOURCE_TYPES = list(RESOURCE_TYPES.values())
-
-# Required keys in every resource config block
-REQUIRED_RESOURCE_CONFIG_KEYS = [
-    "active",
-    "validate"
-]
-
-
-# Config keys in one place
-RESOURCE_BLOCK_CONFIG_KEY = "resources"
 
 
 def valid_resource_key(key):
-    return key in ALL_RESOURCE_TYPES
+    return ProviderResourceTags.valid_resource_check(key)
