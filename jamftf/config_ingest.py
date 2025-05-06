@@ -8,7 +8,6 @@ from .exceptions import InvalidResourceTypeError
 from .models import Resource
 
 
-
 def parse_config_file(path: str) -> list[Resource]:
     """
     Loads and parses a JSON config file from the given path into Resource objects.

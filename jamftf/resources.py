@@ -1,34 +1,22 @@
-"""Resource parent object"""
+"""Resource parent object."""
 
-from logging import Logger
 from requests import HTTPError
 from .models import Resource
 from .constants import ProviderResourceTags
 
 
-
-
 class Scripts(Resource):
-    """Script obj"""
-    resource_type = ProviderResourceTags.script
+    """Jamf Pro script resource."""
+    resource_type = ProviderResourceTags.SCRIPT
 
     def _get(self):
-        """
-        Retrieves data from api and should always populate self.data with:
-        {
-            "name.id": {
-                "id": id,
-                "name": name
-            }
-        }
-        """
+        """Fetch and populate script data."""
         self._log_get()
 
         resp = self.client.classic.scripts.get_all()
         resp.raise_for_status()
 
-        data = resp.json()["scripts"]
-        for i in data:
+        for i in resp.json()["scripts"]:
             self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
                 "name": i["name"],
@@ -36,127 +24,131 @@ class Scripts(Resource):
 
 
 class Categories(Resource):
-    """categories"""
-    resource_type = ProviderResourceTags.category
+    """Jamf Pro category resource."""
+    resource_type = ProviderResourceTags.CATEGORY
 
     def _get(self):
+        """Fetch and populate category data."""
         self._log_get()
 
         resp = self.client.classic.categories.get_all()
-
         if not resp.ok:
             raise HTTPError("bad api call")
 
         for i in resp.json()["categories"]:
             self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
-                "name": i["name"]
+                "name": i["name"],
             }
 
 
 class Policies(Resource):
-    """policies"""
-    resource_type = ProviderResourceTags.policy
+    """Jamf Pro policy resource."""
+    resource_type = ProviderResourceTags.POLICY
 
     def _get(self):
+        """Fetch and populate policy data."""
         self._log_get()
 
         resp = self.client.classic.policies.get_all()
-
         if not resp.ok:
             raise HTTPError("bad api call")
 
         for i in resp.json()["policies"]:
             self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
-                "name": i["name"]
+                "name": i["name"],
             }
 
 
 class ConfigurationProfiles(Resource):
-    """osx config profile"""
-    resource_type = ProviderResourceTags.macos_config_profile
+    """macOS configuration profile resource."""
+    resource_type = ProviderResourceTags.MACOS_CONFIG_PROFILE
 
     def _get(self):
+        """Fetch and populate configuration profile data."""
         self._log_get()
 
         resp = self.client.classic.configuration_profiles.get_all()
-
         if not resp.ok:
             raise HTTPError("bad api call")
 
         for i in resp.json()["os_x_configuration_profiles"]:
             self.data[f"{i['name']}.{i['id']}"] = {
                 "id": i["id"],
-                "name": i["name"]
+                "name": i["name"],
             }
 
 
 class ComputerGroupsStatic(Resource):
-    resource_type = ProviderResourceTags.computer_group_static
+    """Static computer group resource."""
+    resource_type = ProviderResourceTags.COMPUTER_GROUP_STATIC
 
     def _get(self):
+        """Fetch and populate static computer group data."""
         self._log_get()
 
         resp = self.client.classic.computergroups.get_all()
-
         resp.raise_for_status()
 
         for i in resp.json()["computer_groups"]:
             if not i["is_smart"]:
-                self.data[f"{i["name"]}.{i["id"]}"] = {
+                self.data[f"{i['name']}.{i['id']}"] = {
                     "id": i["id"],
-                    "name": i["name"]
+                    "name": i["name"],
                 }
 
 
 class ComputerGroupsSmart(Resource):
-    resource_type = ProviderResourceTags.computer_group_smart
+    """Smart computer group resource."""
+    resource_type = ProviderResourceTags.COMPUTER_GROUP_SMART
 
     def _get(self):
+        """Fetch and populate smart computer group data."""
         self._log_get()
 
         resp = self.client.classic.computergroups.get_all()
-
         resp.raise_for_status()
 
         for i in resp.json()["computer_groups"]:
             if i["is_smart"]:
-                self.data[f"{i["name"]}.{i["id"]}"] = {
+                self.data[f"{i['name']}.{i['id']}"] = {
                     "id": i["id"],
-                    "name": i["name"]
+                    "name": i["name"],
                 }
 
 
 class AdvancedComputerSearches(Resource):
-    resource_type = ProviderResourceTags.advanced_computer_search
+    """Advanced computer search resource."""
+    resource_type = ProviderResourceTags.ADVANCED_COMPUTER_SEARCH
 
     def _get(self):
+        """Fetch and populate advanced computer search data."""
         self._log_get()
 
         resp = self.client.classic.computer_searches.get_all()
-
         resp.raise_for_status()
 
         for i in resp.json()["advanced_computer_searches"]:
-                self.data[f"{i["name"]}.{i["id"]}"] = {
-                    "id": i["id"],
-                    "name": i["name"]
-                }
+            self.data[f"{i['name']}.{i['id']}"] = {
+                "id": i["id"],
+                "name": i["name"],
+            }
 
 
 class ComputerExtensionAttributes(Resource):
-    resource_type = ProviderResourceTags.computer_ext_attr
-    
+    """Computer extension attribute resource."""
+    resource_type = ProviderResourceTags.COMPUTER_EXT_ATTR
+
     def _get(self):
+        """Fetch and populate computer extension attribute data."""
         self._log_get()
 
         resp = self.client.classic.computer_extension_attributes.get_all()
-        
         resp.raise_for_status()
 
         for i in resp.json()["computer_extension_attributes"]:
-                self.data[f"{i["name"]}.{i["id"]}"] = {
-                    "id": i["id"],
-                    "name": i["name"]
-                }
+            self.data[f"{i['name']}.{i['id']}"] = {
+                "id": i["id"],
+                "name": i["name"],
+            }

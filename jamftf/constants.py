@@ -1,4 +1,7 @@
-"""storage for all constant values for easier configuration"""
+"""Storage for all constant values for easier configuration."""
+
+from enum import Enum
+
 from .resources import (
     Scripts,
     Categories,
@@ -7,41 +10,55 @@ from .resources import (
     ComputerGroupsStatic,
     ComputerGroupsSmart,
     AdvancedComputerSearches,
-    ComputerExtensionAttributes
+    ComputerExtensionAttributes,
 )
 
-from enum import Enum
+__all__ = [
+    "ProviderResourceTags",
+    "RESOURCE_TYPE_OBJECT_MAP",
+    "valid_resource_key",
+]
+
 
 class ProviderResourceTags(str, Enum):
-    script = "jamfpro_script"
-    category = "jamfpro_category"
-    policy = "jamfpro_policy"
-    macos_config_profile = "jamfpro_macos_configuration_profile_plist"
-    computer_group_static = "jamfpro_static_computer_group"
-    computer_group_smart = "jamfpro_smart_computer_group"
-    advanced_computer_search = "jamfpro_advanced_computer_search"
-    computer_ext_attr = "jamfpro_computer_extension_attribute"
+    """Supported Jamf provider resource tags."""
+
+    SCRIPT = "jamfpro_script"
+    CATEGORY = "jamfpro_category"
+    POLICY = "jamfpro_policy"
+    MACOS_CONFIG_PROFILE = "jamfpro_macos_configuration_profile_plist"
+    COMPUTER_GROUP_STATIC = "jamfpro_static_computer_group"
+    COMPUTER_GROUP_SMART = "jamfpro_smart_computer_group"
+    ADVANCED_COMPUTER_SEARCH = "jamfpro_advanced_computer_search"
+    COMPUTER_EXT_ATTR = "jamfpro_computer_extension_attribute"
 
     @classmethod
-    def all(cls):
+    def all(cls) -> list["ProviderResourceTags"]:
+        """Return all enum members."""
         return list(cls)
 
     @classmethod
-    def valid_resource_check(cls, key: str):
-        return key in cls._value2member_map_
+    def valid_resource_check(cls, key: str) -> bool:
+        """Return True if key is a valid enum value."""
+        try:
+            cls(key)
+        except ValueError:
+            return False
+        return True
 
 
 RESOURCE_TYPE_OBJECT_MAP = {
-    ProviderResourceTags.script: Scripts,
-    ProviderResourceTags.category: Categories,
-    ProviderResourceTags.policy: Policies,
-    ProviderResourceTags.macos_config_profile: ConfigurationProfiles,
-    ProviderResourceTags.computer_group_static: ComputerGroupsStatic,
-    ProviderResourceTags.computer_group_smart: ComputerGroupsSmart,
-    ProviderResourceTags.advanced_computer_search: AdvancedComputerSearches,
-    ProviderResourceTags.computer_ext_attr: ComputerExtensionAttributes
+    ProviderResourceTags.SCRIPT: Scripts,
+    ProviderResourceTags.CATEGORY: Categories,
+    ProviderResourceTags.POLICY: Policies,
+    ProviderResourceTags.MACOS_CONFIG_PROFILE: ConfigurationProfiles,
+    ProviderResourceTags.COMPUTER_GROUP_STATIC: ComputerGroupsStatic,
+    ProviderResourceTags.COMPUTER_GROUP_SMART: ComputerGroupsSmart,
+    ProviderResourceTags.ADVANCED_COMPUTER_SEARCH: AdvancedComputerSearches,
+    ProviderResourceTags.COMPUTER_EXT_ATTR: ComputerExtensionAttributes,
 }
 
 
-def valid_resource_key(key):
+def valid_resource_key(key: str) -> bool:
+    """Check if the key is a valid provider resource tag."""
     return ProviderResourceTags.valid_resource_check(key)
