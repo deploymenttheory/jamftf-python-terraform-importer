@@ -3,6 +3,17 @@
 from .models import Resource
 from .enums import ProviderResourceTags, ResourceResponseKeys
 
+__all__ = [
+    "Scripts",
+    "Categories",
+    "Policies",
+    "ConfigurationProfiles",
+    "ComputerGroupsStatic",
+    "ComputerGroupsSmart",
+    "AdvancedComputerSearches",
+    "ComputerExtensionAttributes",
+]
+
 
 class Scripts(Resource):
     """Jamf Pro script resource."""
