@@ -12,8 +12,8 @@ def import_block(resource_type, jpro_id):
 
     return (
         f"import {{\n"
-        f"id = {jpro_id}\n"
-        f"to = {resource_type}.{resource_type}-{jpro_id}\n"
+        f"  id = {jpro_id}\n"
+        f"  to = {resource_type}.{resource_type}-{jpro_id}\n"
         f"}}\n"
     )
 

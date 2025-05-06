@@ -2,6 +2,8 @@
 
 import abc
 from logging import Logger
+from typing import Callable, Optional, Any
+from requests import Response
 import jamfpy
 from .exceptions import ImporterConfigError
 from .hcl import generate_imports
@@ -28,16 +30,20 @@ class Resource:
         self.client = client
         self.lg.info("resource initialized: %s", self.resource_type)
 
+
     def __str__(self):
         return f"Jamf Pro Resource of type: {self.resource_type}"
+
 
     def _init_logger(self, log_level: int):
         """Initialises a logger for the resource."""
         self.lg = jamfpy.get_logger(f"resource-{self.resource_type}", level=log_level)
 
+
     def _log_get(self):
         """Logs a standard message for data fetch operations."""
         self.lg.info("getting data for resource type: %s", self.resource_type)
+
 
     @abc.abstractmethod
     def _get(self):
@@ -46,18 +52,19 @@ class Resource:
 
     def _get_from_api(
         self,
-        api_call: callable,
+        api_call: Callable[[], Response],
         response_key: str,
         id_field: str = "id",
-        filter_fn: callable = None,
-    ):
+        filter_fn: Optional[Callable[[dict], bool]] = None,
+    ) -> None:
         """
         Fetch and store resource data as SingleItem objects.
 
-        :param api_call: Function returning requests.Response
-        :param response_key: Key in response JSON (e.g., "scripts")
-        :param id_field: Field name in item to use as ID (default: "id")
-        :param filter_fn: Optional filter for each item
+        Args:
+            api_call: No-arg function that returns a requests.Response.
+            response_key: Top-level key in the response JSON to iterate.
+            id_field: Field in each item to extract as the unique ID (default: "id").
+            filter_fn: Optional function to filter items by content.
         """
         self._log_get()
         resp = api_call()
@@ -68,13 +75,16 @@ class Resource:
                 continue
             self.data.append(SingleItem(self.resource_type, item[id_field]))
 
+
     def build_hcl(self):
         """Generate HCL for all resource data."""
         return generate_imports(self.data)
 
+
     def set_client(self, client: jamfpy.Tenant):
         """Assign a Jamf client to the resource."""
         self.client = client
+
 
     def refresh_data(self):
         """Refresh data held by the object from the API."""
