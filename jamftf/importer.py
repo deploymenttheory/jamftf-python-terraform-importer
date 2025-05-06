@@ -1,83 +1,57 @@
-"""main importer object"""
+"""Main importer object."""
+
 from typing import List
 import jamfpy
 from .exceptions import ImporterConfigError
 from .models import Resource
 
+
 class Importer:
     """
-    A class for managing and importing targetted resources from a Jamf tenant.
-
-    This class handles the initialization, refreshing, and HCL generation for a collection
-    of Resource objects associated with a Jamf tenant.
-
-    Attributes:
-        targetted (List[Resource]): A list of Resource objects to be managed.
+    Manages and imports targetted Jamf resources.
 
     Args:
-        client (jamfpy.Tenant): The Jamf tenant client used for API interactions.
-        targetted (List[Resource]): A list of Resource objects to be managed.
+        client (jamfpy.Tenant): Jamf API client.
+        targetted (List[Resource]): Resources to manage and import.
 
     Raises:
-        AssertionError: If the provided client is not an instance of jamfpy.Tenant.
-        ImporterConfigError: If the targetted list is empty.
-
-    Methods:
-        Refresh(): Refreshes the data for all targetted resources.
-        HCL(): Generates HCL (HashiCorp Configuration Language) for all targetted resources.
+        AssertionError: If client or target types are invalid.
+        ImporterConfigError: If no resources are provided.
     """
 
-    targetted: list[Resource]
-    def __init__(
-            self,
-            client: jamfpy.Tenant,
-            targetted: List[Resource],
-        ):
+    targetted: List[Resource]
 
-        assert isinstance(client, jamfpy.Tenant), f"invalid client type {type(client)}"
+    def __init__(self, client: jamfpy.Tenant, targetted: List[Resource]):
 
         if not targetted:
-            raise ImporterConfigError("no targets set")
+            raise ImporterConfigError("No resources provided")
 
-        assert all(isinstance(t, Resource) for t in targetted), "invalid resource type provided"
-
-        for t in targetted:
-            t.set_client(client)
-            t.refresh_data()
+        for resource in targetted:
+            resource.set_client(client)
+            resource.refresh_data()
 
         self.targetted = targetted
 
 
     def refresh(self):
-        """refreshes data held by resource objects"""
-        for t in self.targetted:
-            t.refresh_data()
+        """Refresh all resource data."""
+        for resource in self.targetted:
+            resource.refresh_data()
 
 
-    def hcl_s(self):
-        """
-        Generates HCL as a dict
-        Joins it into stringd 
-        """
-        out = ""
-        hcld = self.hcl_d()
-        for i in hcld.values():
-            out += (i + "\n")
+    def hcl_s(self) -> str:
+        """Return all import blocks as a single joined string."""
 
-        return out
+        return "\n".join(block for block in self.hcl_d().values())
 
 
-    def hcl_d(self):
-        """
-        Returns dict as:
-        "resource_type: "import statements"
-        """
+    def hcl_d(self) -> dict:
+        """Return import blocks grouped by resource type."""
         out = {}
-        for r in self.targetted:
-            if r.resource_type not in out:
-                out[r.resource_type] = ""
 
-            out[r.resource_type] += "\n" + "\n".join(r.build_hcl())
-
+        for resource in self.targetted:
+            hcl = "\n".join(resource.build_hcl())
+            out.setdefault(resource.resource_type, "")
+            out[resource.resource_type] += f"\n{hcl}"
 
         return out

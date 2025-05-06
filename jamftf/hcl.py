@@ -7,23 +7,7 @@ from .dataclasses import SingleItem
 
 def import_block(resource_type, jpro_id):
     """
-    Generate a formatted import block for a resource.
-
-    Args:
-        resource_type (str): The type of the resource being imported.
-        name (str): The name of the resource.
-        jpro_id (int or str): The server ID of the resource.
-
-    Returns:
-        str: A formatted string representing the import block.
-
-    Example:
-        >>> import_block("aws_instance", "web_server", 12345)
-        "import {
-        id = 12345
-        to = aws_instance.web_server
-        }
-        "
+    Return a Terraform import block string for a resource.
     """
 
     return (
@@ -36,7 +20,7 @@ def import_block(resource_type, jpro_id):
 
 def generate_imports(resources: List[SingleItem]) -> list:
     """
-    todo
+    Return import blocks for a list of SingleItem resources.
     """
 
     return [import_block(i.resource_type, i.jpro_id) for i in resources]
