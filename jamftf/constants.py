@@ -47,6 +47,17 @@ class ProviderResourceTags(str, Enum):
         return True
 
 
+class ResourceResponseKeys(str, Enum):
+    """Top-level JSON keys for each Jamf Pro resource API response."""
+    SCRIPTS = "scripts"
+    CATEGORIES = "categories"
+    POLICIES = "policies"
+    CONFIG_PROFILES = "os_x_configuration_profiles"
+    COMPUTER_GROUPS = "computer_groups"
+    ADVANCED_COMPUTER_SEARCHES = "advanced_computer_searches"
+    EXT_ATTRS = "computer_extension_attributes"
+
+
 RESOURCE_TYPE_OBJECT_MAP = {
     ProviderResourceTags.SCRIPT: Scripts,
     ProviderResourceTags.CATEGORY: Categories,

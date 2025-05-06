@@ -1,8 +1,8 @@
 """Resource parent object."""
 
 from requests import HTTPError
-from .models import Resource
-from .constants import ProviderResourceTags
+from .models import Resource, SingleItem
+from .constants import ProviderResourceTags, ResourceResponseKeys
 
 
 class Scripts(Resource):
@@ -16,11 +16,8 @@ class Scripts(Resource):
         resp = self.client.classic.scripts.get_all()
         resp.raise_for_status()
 
-        for i in resp.json()["scripts"]:
-            self.data[f"{i['name']}.{i['id']}"] = {
-                "id": i["id"],
-                "name": i["name"],
-            }
+        for i in resp.json()[ResourceResponseKeys.SCRIPTS]:
+            self.data.append(SingleItem(self.resource_type, i["id"]))
 
 
 class Categories(Resource):
@@ -35,11 +32,8 @@ class Categories(Resource):
         if not resp.ok:
             raise HTTPError("bad api call")
 
-        for i in resp.json()["categories"]:
-            self.data[f"{i['name']}.{i['id']}"] = {
-                "id": i["id"],
-                "name": i["name"],
-            }
+        for i in resp.json()[ResourceResponseKeys.CATEGORIES]:
+            self.data.append(SingleItem(self.resource_type, i["id"]))
 
 
 class Policies(Resource):
@@ -54,11 +48,8 @@ class Policies(Resource):
         if not resp.ok:
             raise HTTPError("bad api call")
 
-        for i in resp.json()["policies"]:
-            self.data[f"{i['name']}.{i['id']}"] = {
-                "id": i["id"],
-                "name": i["name"],
-            }
+        for i in resp.json()[ResourceResponseKeys.POLICIES]:
+            self.data.append(SingleItem(self.resource_type, i["id"]))
 
 
 class ConfigurationProfiles(Resource):
@@ -73,11 +64,8 @@ class ConfigurationProfiles(Resource):
         if not resp.ok:
             raise HTTPError("bad api call")
 
-        for i in resp.json()["os_x_configuration_profiles"]:
-            self.data[f"{i['name']}.{i['id']}"] = {
-                "id": i["id"],
-                "name": i["name"],
-            }
+        for i in resp.json()[ResourceResponseKeys.CONFIG_PROFILES]:
+            self.data.append(SingleItem(self.resource_type, i["id"]))
 
 
 class ComputerGroupsStatic(Resource):
@@ -91,12 +79,9 @@ class ComputerGroupsStatic(Resource):
         resp = self.client.classic.computergroups.get_all()
         resp.raise_for_status()
 
-        for i in resp.json()["computer_groups"]:
+        for i in resp.json()[ResourceResponseKeys.COMPUTER_GROUPS]:
             if not i["is_smart"]:
-                self.data[f"{i['name']}.{i['id']}"] = {
-                    "id": i["id"],
-                    "name": i["name"],
-                }
+                self.data.append(SingleItem(self.resource_type, i["id"]))
 
 
 class ComputerGroupsSmart(Resource):
@@ -110,12 +95,9 @@ class ComputerGroupsSmart(Resource):
         resp = self.client.classic.computergroups.get_all()
         resp.raise_for_status()
 
-        for i in resp.json()["computer_groups"]:
+        for i in resp.json()[ResourceResponseKeys.COMPUTER_GROUPS]:
             if i["is_smart"]:
-                self.data[f"{i['name']}.{i['id']}"] = {
-                    "id": i["id"],
-                    "name": i["name"],
-                }
+                self.data.append(SingleItem(self.resource_type, i["id"]))
 
 
 class AdvancedComputerSearches(Resource):
@@ -129,11 +111,8 @@ class AdvancedComputerSearches(Resource):
         resp = self.client.classic.computer_searches.get_all()
         resp.raise_for_status()
 
-        for i in resp.json()["advanced_computer_searches"]:
-            self.data[f"{i['name']}.{i['id']}"] = {
-                "id": i["id"],
-                "name": i["name"],
-            }
+        for i in resp.json()[ResourceResponseKeys.ADVANCED_COMPUTER_SEARCHES]:
+            self.data.append(SingleItem(self.resource_type, i["id"]))
 
 
 class ComputerExtensionAttributes(Resource):
@@ -147,8 +126,5 @@ class ComputerExtensionAttributes(Resource):
         resp = self.client.classic.computer_extension_attributes.get_all()
         resp.raise_for_status()
 
-        for i in resp.json()["computer_extension_attributes"]:
-            self.data[f"{i['name']}.{i['id']}"] = {
-                "id": i["id"],
-                "name": i["name"],
-            }
+        for i in resp.json()[ResourceResponseKeys.EXT_ATTRS]:
+            self.data.append(SingleItem(self.resource_type, i["id"]))

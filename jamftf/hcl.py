@@ -2,7 +2,10 @@
 handles all hcl related operations
 """
 
-def import_block(resource_type, name, jpro_id):
+from typing import List
+from .models import SingleItem
+
+def import_block(resource_type, jpro_id):
     """
     Generate a formatted import block for a resource.
 
@@ -23,22 +26,12 @@ def import_block(resource_type, name, jpro_id):
         "
     """
 
-    return "import {\nid = " + str(jpro_id) + "\nto = " + f"{resource_type}.{name}" + "\n}\n"
+    return "import {\nid = " + str(jpro_id) + "\nto = " + f"{resource_type}.{resource_type}-{jpro_id}" + "\n}\n"
 
 
-def generate_imports(resource_type: str, resources: dict) -> list:
+def generate_imports(resources: List[SingleItem]) -> list:
     """
     todo
     """
-    out_list = []
 
-    for d in resources:
-        out_list.append(
-            import_block(
-                resource_type=resource_type,
-                name = resources[d]["name"],
-                jpro_id = resources[d]["id"]
-            )
-        )
-
-    return out_list
+    return [import_block(i.resource_type, i.jpro_id) for i in resources]
