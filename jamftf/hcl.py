@@ -26,7 +26,12 @@ def import_block(resource_type, jpro_id):
         "
     """
 
-    return "import {\nid = " + str(jpro_id) + "\nto = " + f"{resource_type}.{resource_type}-{jpro_id}" + "\n}\n"
+    return (
+        f"import {{\n"
+        f"id = {jpro_id}\n"
+        f"to = {resource_type}.{resource_type}-{jpro_id}\n"
+        f"}}\n"
+    )
 
 
 def generate_imports(resources: List[SingleItem]) -> list:
