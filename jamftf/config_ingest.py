@@ -1,105 +1,51 @@
 """Configuration file ingest functions"""
 
+from pathlib import Path
 from typing import List
 import json
-from .constants import (
-    EXCLUDE_BLOCK_CONFIG_KEY,
-    ALL_RESOURCE_TYPES,
-    RESOURCE_BLOCK_CONFIG_KEY,
-    VALID_RESOURCE_CONFIG_KEYS,
-    REQUIRED_RESOURCE_CONFIG_KEYS
-)
-from .exceptions import InvalidResourceTypeError, DataError
-from .resources import (
-    Resource,
-    Scripts,
-    Categories,
-    Policies
-)
-from .options import Options
-
-
-RESOURCE_TYPE_OBJECT_MAP = {
-    "jamfpro_script": Scripts,
-    "jamfpro_category": Categories,
-    "jamfpro_policy": Policies
-}
+from .constants import valid_resource_key, RESOURCE_TYPE_OBJECT_MAP
+from .exceptions import InvalidResourceTypeError
+from .models import Resource
 
 
 def parse_config_file(path: str) -> list[Resource]:
     """
+    Loads and parses a JSON config file from the given path into Resource objects.
+
+    The path is sanitized, expanded, and validated before reading.
+    Raises FileNotFoundError if the file does not exist.
     """
 
-    # // TODO sanitise the path
-    sanitized_path = path
+    safe_path = Path(path).expanduser().resolve(strict=False)
 
-    json_data = {}
-    with open(sanitized_path, "r", encoding="UTF-8") as f:
+    if not safe_path.is_file():
+        raise FileNotFoundError(f"Config file not found: {safe_path}")
+
+    with safe_path.open("r", encoding="UTF-8") as f:
         json_data = json.load(f)
-
 
     return parse_config_dict(json_data)
 
 
 def parse_config_dict(config_json: dict) -> List[Resource]:
     """
+    Parses a config dictionary into a list of active Resource instances.
+
+    Skips inactive entries and raises InvalidResourceTypeError for unknown resource types.
     """
+
     out = []
-    exclude_block = {}
 
-    if EXCLUDE_BLOCK_CONFIG_KEY in config_json:
-        exclude_block = config_json[EXCLUDE_BLOCK_CONFIG_KEY]
+    for res_key, active in config_json.items():
 
-        for rk in exclude_block:
-            if rk not in ALL_RESOURCE_TYPES:
-                raise DataError("invalid resource key in exclude block")
+        if not valid_resource_key(res_key):
+            raise InvalidResourceTypeError(f"invalid resource type: {res_key}")
 
-    if RESOURCE_BLOCK_CONFIG_KEY not in config_json:
-        raise KeyError("resources block not present in config file")
-
-
-    res_block: dict = config_json[RESOURCE_BLOCK_CONFIG_KEY]
-    k: str
-    v: dict
-
-    # for res key, keys
-    for k, v in res_block.items():
-
-        # If invalid resource
-        if k not in ALL_RESOURCE_TYPES:
-            raise InvalidResourceTypeError(f"invalid resource type: {k}")
-
-        # If it contains an invalid config key
-        for i in v:
-            if i not in VALID_RESOURCE_CONFIG_KEYS:
-                raise DataError(f"invalid config key: {i}")
-
-        # If missing a required config key
-        for i in REQUIRED_RESOURCE_CONFIG_KEYS:
-            if i not in v:
-                raise DataError(f"missing required config key: {i}")
-
-        # If the resource should be validated
-        validate = v["validate"]
-        if not isinstance(validate, bool):
-            raise AssertionError(f"validate key is of the wrong type: {validate}, {type(validate)}")
-
-        # If the resource should be prossessed.
-        active = v["active"]
-        if not isinstance(active, bool):
-            raise AssertionError(f"active key is of the wrong type: {active}, {type(active)}")
-
-        # If inactive, skip
         if not active:
             continue
 
-        
         out.append(
-            RESOURCE_TYPE_OBJECT_MAP[k](
-                options=Options().from_json(v),
-                validate=validate,
-                exclude=exclude_block[k] if k in exclude_block else []
-            )
+            RESOURCE_TYPE_OBJECT_MAP[res_key]()
         )
 
     return out

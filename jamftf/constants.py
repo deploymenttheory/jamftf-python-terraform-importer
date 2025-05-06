@@ -1,34 +1,38 @@
-"""storage for all constant values for easier configuration"""
+"""Storage for all constant values for easier configuration."""
 
-# Invalid characters in resource names
-ILLEGAL_NAME_CHARS = [".", "/", " "]
+from .enums import ProviderResourceTags
 
-# terraform resource type strings centralised
-RESOURCE_TYPES = {
-    "script": "jamfpro_script",
-    "category": "jamfpro_category",
-    "department": "jamfpro_department",
-    "policy": "jamfpro_policy",
-    "osx_config_profile": "jamfpro_macos_configuration_profile_plist"
+from .resources import (
+    Scripts,
+    Categories,
+    Policies,
+    ConfigurationProfiles,
+    ComputerGroupsStatic,
+    ComputerGroupsSmart,
+    AdvancedComputerSearches,
+    ComputerExtensionAttributes,
+)
+
+__all__ = [
+    "ProviderResourceTags",
+    "RESOURCE_TYPE_OBJECT_MAP",
+    "valid_resource_key",
+]
+
+
+
+RESOURCE_TYPE_OBJECT_MAP = {
+    ProviderResourceTags.SCRIPT: Scripts,
+    ProviderResourceTags.CATEGORY: Categories,
+    ProviderResourceTags.POLICY: Policies,
+    ProviderResourceTags.MACOS_CONFIG_PROFILE: ConfigurationProfiles,
+    ProviderResourceTags.COMPUTER_GROUP_STATIC: ComputerGroupsStatic,
+    ProviderResourceTags.COMPUTER_GROUP_SMART: ComputerGroupsSmart,
+    ProviderResourceTags.ADVANCED_COMPUTER_SEARCH: AdvancedComputerSearches,
+    ProviderResourceTags.COMPUTER_EXT_ATTR: ComputerExtensionAttributes,
 }
 
-# Values from above
-ALL_RESOURCE_TYPES = list(RESOURCE_TYPES.values())
 
-# Required keys in every resource config block
-REQUIRED_RESOURCE_CONFIG_KEYS = [
-    "active",
-    "validate"
-]
-
-# All balid config keys
-VALID_RESOURCE_CONFIG_KEYS = [
-    "active", 
-    "validate",
-    "use_resource_type_as_name",
-    "exclude_ids",
-]
-
-# Config keys in one place
-EXCLUDE_BLOCK_CONFIG_KEY = "exclude_ids"
-RESOURCE_BLOCK_CONFIG_KEY = "resources"
+def valid_resource_key(key: str) -> bool:
+    """Check if the key is a valid provider resource tag."""
+    return ProviderResourceTags.valid_resource_check(key)
