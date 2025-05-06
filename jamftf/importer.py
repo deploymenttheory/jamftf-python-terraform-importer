@@ -38,7 +38,7 @@ class Importer:
 
         if not targetted:
             raise ImporterConfigError("no targets set")
-        
+
         assert all(isinstance(t, Resource) for t in targetted), "invalid resource type provided"
 
         for t in targetted:
@@ -48,26 +48,26 @@ class Importer:
         self.targetted = targetted
 
 
-    def Refresh(self):
+    def refresh(self):
         """refreshes data held by resource objects"""
         for t in self.targetted:
             t.refresh_data()
 
 
-    def HCLs(self):
+    def hcl_s(self):
         """
         Generates HCL as a dict
         Joins it into stringd 
         """
         out = ""
-        hcld = self.HCLd()
+        hcld = self.hcl_d()
         for i in hcld.values():
             out += (i + "\n")
 
         return out
 
 
-    def HCLd(self):
+    def hcl_d(self):
         """
         Returns dict as:
         "resource_type: "import statements"

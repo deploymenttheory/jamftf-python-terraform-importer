@@ -1,91 +1,88 @@
+"""Base class for Jamf resource types."""
+
+import abc
 from logging import Logger
 import jamfpy
-import abc
-from .exceptions import InvalidResourceTypeError, ImporterConfigError
+from .exceptions import ImporterConfigError
 from .hcl import generate_imports
+from .dataclasses import SingleItem
 
 LOG_LEVEL_DEBUG = 10
 LOG_LEVEL_INFO = 20
 
-class SingleItem:
-    def __init__(self, resource_type, jpro_id):
-        self.resource_type = resource_type
-        self.jpro_id = jpro_id
+
+
 
 
 class Resource:
-    """parent obj for resources"""
+    """Parent object for Jamf Pro resources."""
     resource_type = ""
     lg: Logger
 
-    def __init__(
-            self,
-            client: jamfpy.Tenant = None,
-            debug: bool = False,
-        ):
-
+    def __init__(self, client: jamfpy.Tenant = None, debug: bool = False):
         log_level = LOG_LEVEL_DEBUG if debug else LOG_LEVEL_INFO
-
         self._init_logger(log_level)
 
-        # TODO why do we do this?
         self.data = []
 
         self.client = client
-
-        self.lg.info("resource initilized: %s", self.resource_type)
-
-
-    # Magic
+        self.lg.info("resource initialized: %s", self.resource_type)
 
     def __str__(self):
         return f"Jamf Pro Resource of type: {self.resource_type}"
 
-
     def _init_logger(self, log_level: int):
-        """_init_logger initilizes a logger"""
+        """Initialises a logger for the resource."""
         self.lg = jamfpy.get_logger(f"resource-{self.resource_type}", level=log_level)
 
-
     def _log_get(self):
-        """standardises log for getting data"""
+        """Logs a standard message for data fetch operations."""
         self.lg.info("getting data for resource type: %s", self.resource_type)
-
 
     @abc.abstractmethod
     def _get(self):
-        """
-        Retrieves data from api and should always populate self.data with:
-        {
-            "jamfpro_resourcename.id": {
-                "id": X,
-                "name": Y
-            }
-        }
-        """
-        pass
+        """Fetch data and populate self.data (to be implemented by subclasses)."""
 
 
-    # Public
+    def _get_from_api(
+        self,
+        api_call: callable,
+        response_key: str,
+        id_field: str = "id",
+        filter_fn: callable = None,
+    ):
+        """
+        Fetch and store resource data as SingleItem objects.
+
+        :param api_call: Function returning requests.Response
+        :param response_key: Key in response JSON (e.g., "scripts")
+        :param id_field: Field name in item to use as ID (default: "id")
+        :param filter_fn: Optional filter for each item
+        """
+        self._log_get()
+        resp = api_call()
+        resp.raise_for_status()
+
+        for item in resp.json()[response_key]:
+            if filter_fn and not filter_fn(item):
+                continue
+            self.data.append(SingleItem(self.resource_type, item[id_field]))
 
     def build_hcl(self):
-        """Generates HCL for all Script attrs"""
-        return generate_imports(self.resource_type, self.data)
+        """Generate HCL for all resource data."""
+        return generate_imports(self.data)
 
-
-    def set_client(self, c: jamfpy.Tenant):
-        self.client = c
-
+    def set_client(self, client: jamfpy.Tenant):
+        """Assign a Jamf client to the resource."""
+        self.client = client
 
     def refresh_data(self):
-        """refreshes data held by object from api"""
+        """Refresh data held by the object from the API."""
         self.lg.info("refreshing data...")
 
         if self.client is None:
-            raise ImporterConfigError("no client provided. Provide client via object creation or .set_client(client)")
+            raise ImporterConfigError(
+                "no client provided. Provide client via object creation or .set_client(client)"
+                )
 
         self._get()
-
-
-
-

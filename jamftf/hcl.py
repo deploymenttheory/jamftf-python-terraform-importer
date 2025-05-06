@@ -3,7 +3,7 @@ handles all hcl related operations
 """
 
 from typing import List
-from .models import SingleItem
+from .dataclasses import SingleItem
 
 def import_block(resource_type, jpro_id):
     """
