@@ -1,10 +1,9 @@
-"""Storage for enums"""
+"""Storage for enums."""
 
 from enum import Enum
 
-class ProviderResourceTags(str, Enum):
-    """Supported Jamf provider resource tags."""
-
+class ProviderResourceTags(Enum):
+    """Jamf provider resource tags."""
     SCRIPT = "jamfpro_script"
     CATEGORY = "jamfpro_category"
     POLICY = "jamfpro_policy"
@@ -28,9 +27,8 @@ class ProviderResourceTags(str, Enum):
             return False
         return True
 
-
-class ResourceResponseKeys(str, Enum):
-    """Top-level JSON keys for each Jamf Pro resource API response."""
+class ResourceResponseKeys(Enum):
+    """API response keys for resources."""
     SCRIPTS = "scripts"
     CATEGORIES = "categories"
     POLICIES = "policies"

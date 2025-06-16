@@ -12,6 +12,8 @@ requires-python = ">=3.8"
 
 dependencies = [
     "requests",
+    "jamfpy @ git+https://github.com/thejoeker12/jamfpy@main",
+    "python-dotenv>=1.0.0",
 ]
 dynamic = ["version"]
 

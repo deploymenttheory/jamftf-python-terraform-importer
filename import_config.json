@@ -1,0 +1,10 @@
+{
+    "scripts": true,
+    "policies": true,
+    "configuration_profiles": true,
+    "categories": true,
+    "computer_groups_static": true,
+    "computer_groups_smart": true,
+    "advanced_computer_searches": true,
+    "computer_extension_attributes": true
+}

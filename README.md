@@ -1,89 +1,125 @@
-# jamftf-python-terraform-importer
+# Jamf Pro Terraform Importer
 
-A Python-based utility to automate the import of existing Jamf Pro resources into Terraform state files.
+A Python tool to generate Terraform import blocks for existing Jamf Pro resources.
 
 ## Overview
 
-Managing Jamf Pro resources with Terraform enhances reproducibility, version control, and automation. However, importing existing Jamf Pro resources into Terraform can be tedious and error-prone. This tool simplifies the process by:
+This tool connects to a Jamf Pro instance and generates Terraform import blocks for specified resources. It supports importing various Jamf Pro resources such as:
 
-- Connecting to your Jamf Pro tenant via the Classic API.
-- Fetching specified resources (e.g., scripts, policies, configuration profiles).
-- Generating Terraform import blocks for each resource.
-
-This facilitates a smoother transition to Infrastructure as Code (IaC) practices with Jamf Pro.
-
-## Features
-
-- Supports multiple Jamf Pro resource types.
-- Generates Terraform import blocks compatible with Terraform v1.5 and above.
-- Modular design for easy extension to additional resource types.
-- Command-line interface for straightforward operation.
+- Scripts
+- Categories
+- Policies
+- macOS Configuration Profiles
+- Static Computer Groups
+- Smart Computer Groups
+- Advanced Computer Searches
+- Computer Extension Attributes
 
 ## Prerequisites
 
-- Python 3.7 or higher
-- Access to a Jamf Pro instance with appropriate API credentials
-- Terraform v1.5 or higher
+- Python 3.8 or higher
+- A Jamf Pro instance with API access
+- OAuth2 credentials (Client ID and Secret) for Jamf Pro API access
 
 ## Installation
 
-1. Clone the repository:
-
+1. Clone this repository:
    ```bash
-   git clone https://github.com/deploymenttheory/jamftf-python-terraform-importer.git
+   git clone https://github.com/yourusername/jamftf-python-terraform-importer.git
    cd jamftf-python-terraform-importer
    ```
 
-2. Install the required Python packages:
-
+2. Create and activate a virtual environment:
    ```bash
-   pip install -r requirements.txt
+   python -m venv env
+   source env/bin/activate  # On Windows: env\Scripts\activate
+   ```
+
+3. Install the package in development mode:
+   ```bash
+   pip install -e .
+   ```
+
+## Configuration
+
+1. Create a `.env` file in the project root with your Jamf Pro credentials:
+   ```env
+   JAMF_AUTH_METHOD=oauth2
+   JAMF_URL=https://your-instance.jamfcloud.com
+   JAMF_CLIENT_ID=your-client-id
+   JAMF_CLIENT_SECRET=your-client-secret
+   ```
+
+2. Create an `import_config.json` file to specify which resources to import:
+   ```json
+   {
+     "scripts": true,
+     "categories": true,
+     "policies": true,
+     "configuration_profiles": true,
+     "computer_groups_static": true,
+     "computer_groups_smart": true,
+     "advanced_computer_searches": true,
+     "computer_extension_attributes": true
+   }
    ```
 
 ## Usage
 
-1. Configure your Jamf Pro API credentials and desired resources using environment variables or a JSON config file like `import_config.json`:
+Run the importer with default settings:
+```bash
+python main.py
+```
 
-   ```json
-   {
-     "jamfpro_macos_configuration_profile_plist": true
-   }
-   ```
+### Command Line Options
 
-2. Run the importer script:
+- `-c, --config`: Specify a different configuration file (default: `import_config.json`)
+- `-o, --output`: Write output to a file instead of stdout
+- `--env-file`: Specify a different `.env` file (default: `.env`)
 
-   ```bash
-   python main.py
-   ```
+Example:
+```bash
+python main.py -c my_config.json -o import_blocks.tf
+```
 
-   This will generate Terraform import blocks for the selected resource types.
+## Output
 
-3. Use the generated import blocks to import resources into Terraform state:
+The tool generates Terraform import blocks in HCL format. Example output:
+```hcl
+import {
+  to = jamfpro_computer_extension_attribute.apn_cert_uid1
+  id = "1"
+}
+resource "jamfpro_computer_extension_attribute" "apn_cert_uid1" {
+  name = "APN Cert UID" 
+}
+```
 
-   ```bash
-   terraform import <resource_type>.<resource_name> <resource_id>
-   ```
+## Development
 
-## Supported Resources
+### Project Structure
 
-- Scripts
-- Policies
-- Configuration Profiles
-- Categories
-- Computer Groups (Static and Smart)
-- Advanced Computer Searches
-- Computer Extension Attributes
+```
+jamftf/
+├── __init__.py
+├── config_ingest.py    # Configuration file handling
+├── constants.py        # Constants and mappings
+├── dataclasses.py      # Data structures
+├── enums.py           # Enumerations
+├── exceptions.py      # Custom exceptions
+├── hcl.py            # HCL generation
+├── importer.py       # Main importer logic
+├── models.py         # Base resource models
+└── resources.py      # Resource-specific implementations
+```
 
-Support for additional resource types can be added by extending the `Resource` class and implementing the `_get()` method.
+### Adding New Resource Types
 
-## Contributing
-
-Contributions are welcome! Please submit a pull request or open an issue to propose changes or enhancements.
+1. Add the resource type to `ProviderResourceTags` in `enums.py`
+2. Add the response key to `ResourceResponseKeys` in `enums.py`
+3. Create a new resource class in `resources.py`
+4. Add the resource to `RESOURCE_KEY_MAP` and `RESOURCE_TYPE_OBJECT_MAP` in `constants.py`
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
-For more information and updates, visit the [GitHub repository](https://github.com/deploymenttheory/jamftf-python-terraform-importer).
+This project is licensed under the MIT License - see the LICENSE file for details.
