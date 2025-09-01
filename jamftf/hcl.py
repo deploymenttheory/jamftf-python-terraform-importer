@@ -17,7 +17,7 @@ def import_block(resource_type, jpro_id):
     return (
         f"import {{\n"
         f"{2 * SPACE}id{SPACE}={SPACE}{jpro_id}\n"
-        f"{2 * SPACE}to{SPACE}={SPACE}{resource_type.value}.{resource_type.value}-{jpro_id}\n"
+        f"{2 * SPACE}to{SPACE}={SPACE}{resource_type.value}.{resource_type.value}_{jpro_id}\n"
         f"}}\n"
     )
 
