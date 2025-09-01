@@ -16,8 +16,8 @@ def import_block(resource_type, jpro_id):
     # on exactly which characters are being returned and how many of them.
     return (
         f"import {{\n"
-        f"{2 * SPACE}id{SPACE}={SPACE}{jpro_id}\n"
-        f"{2 * SPACE}to{SPACE}={SPACE}{resource_type.value}.{resource_type.value}-{jpro_id}\n"
+        f"\tid{SPACE}={SPACE}{jpro_id}\n"
+        f"\tto{SPACE}={SPACE}{resource_type.value}.{resource_type.value}-{jpro_id}\n"
         f"}}\n"
     )
 
