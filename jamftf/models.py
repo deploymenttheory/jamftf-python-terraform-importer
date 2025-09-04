@@ -12,10 +12,6 @@ from .dataclasses import SingleItem
 LOG_LEVEL_DEBUG = 10
 LOG_LEVEL_INFO = 20
 
-
-
-
-
 class Resource:
     """Parent object for Jamf Pro resources."""
     resource_type = ""
