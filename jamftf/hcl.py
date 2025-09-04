@@ -1,11 +1,11 @@
 """
 handles all hcl related operations
 """
+from typing import List
+from .dataclasses import SingleItem
 
 SPACE = "\x20"
 
-from typing import List
-from .dataclasses import SingleItem
 
 def import_block(resource_type, jpro_id):
     """

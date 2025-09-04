@@ -2,7 +2,7 @@
 
 import abc
 from logging import Logger
-from typing import Callable, Optional, Any
+from typing import Callable, Optional
 from requests import Response
 import jamfpy
 from .exceptions import ImporterConfigError
