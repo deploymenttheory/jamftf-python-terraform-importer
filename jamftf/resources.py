@@ -65,7 +65,7 @@ class ComputerGroupsStatic(Resource):
 
     def _get(self):
         self._get_from_api(
-            self.client.classic.computergroups.get_all,
+            self.client.classic.computer_groups.get_all,
             ResourceResponseKeys.COMPUTER_GROUPS,
             filter_fn=lambda i: not i["is_smart"],
         )
@@ -77,7 +77,7 @@ class ComputerGroupsSmart(Resource):
 
     def _get(self):
         self._get_from_api(
-            self.client.classic.computergroups.get_all,
+            self.client.classic.computer_groups.get_all,
             ResourceResponseKeys.COMPUTER_GROUPS,
             filter_fn=lambda i: i["is_smart"],
         )

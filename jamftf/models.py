@@ -2,7 +2,7 @@
 
 import abc
 from logging import Logger
-from typing import Callable, Optional, Any
+from typing import Callable, Optional
 from requests import Response
 import jamfpy
 from .exceptions import ImporterConfigError
@@ -11,10 +11,6 @@ from .dataclasses import SingleItem
 
 LOG_LEVEL_DEBUG = 10
 LOG_LEVEL_INFO = 20
-
-
-
-
 
 class Resource:
     """Parent object for Jamf Pro resources."""
